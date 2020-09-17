@@ -1,24 +1,5 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.version-name {
-  color: #47321c;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-  }
-}
-
-.App-header {
   background-color: #fbaf17;
   min-height: 100vh;
   display: flex;
@@ -29,6 +10,30 @@
   color: white;
 }
 
+.App-logo {
+  height: 20vmin;
+  pointer-events: none;
+}
+
+.version {
+  color: #47321c;
+  font-size: 10px;
+  font-weight: lighter;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+  }
+}
+
+.App-header {
+
+}
+
 .App-link {
   color: #61dafb;
+}
+
+.margin-bottom-10 {
+  margin-bottom: 10px;
 }
