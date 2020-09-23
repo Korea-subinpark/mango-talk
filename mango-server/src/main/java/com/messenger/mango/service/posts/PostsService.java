@@ -1,5 +1,6 @@
 package com.messenger.mango.service.posts;
 
+import com.messenger.mango.common.exception.PostsNotFoundException;
 import com.messenger.mango.domain.posts.Posts;
 import com.messenger.mango.domain.posts.PostsRepository;
 import com.messenger.mango.web.dto.PostsDto;
@@ -25,7 +26,7 @@ public class PostsService {
 
     public PostsDto.Response findById(Long id) {
         Posts entity = postsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+                .orElseThrow(() -> new PostsNotFoundException("해당 게시글이 없습니다. id=" + id));
 
         return new PostsDto.Response(entity);
     }
@@ -39,7 +40,7 @@ public class PostsService {
     @Transactional
     public Long update(Long id, PostsDto.UpdateRequest requestDto) {
         Posts posts = postsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+                .orElseThrow(() -> new PostsNotFoundException("해당 게시글이 없습니다. id=" + id));
 
         posts.update(requestDto.getTitle(), requestDto.getContent());
         return id;
@@ -48,7 +49,7 @@ public class PostsService {
     @Transactional
     public void delete(Long id) {
         Posts posts = postsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+                .orElseThrow(() -> new PostsNotFoundException("해당 게시글이 없습니다. id=" + id));
 
         postsRepository.delete(posts);
     }
