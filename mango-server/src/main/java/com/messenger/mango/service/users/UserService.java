@@ -1,6 +1,5 @@
 package com.messenger.mango.service.users;
 
-import com.messenger.mango.domain.users.User;
 import com.messenger.mango.domain.users.UserRepository;
 import com.messenger.mango.web.dto.UserDto;
 import lombok.RequiredArgsConstructor;
@@ -15,19 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-
-    public boolean login(UserDto.LoginRequest request) {
-        String username = request.getUsername();
-        String password = request.getPassword();
-
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("해당 계정이 없습니다. username=" + username));
-
-        if (!user.getPassword().equals(password)) {
-            return false;
-        }
-        return true;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
