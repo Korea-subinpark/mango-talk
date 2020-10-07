@@ -1,8 +1,8 @@
 package com.messenger.mango.web;
 
-import com.messenger.mango.domain.posts.Posts;
-import com.messenger.mango.domain.posts.PostsRepository;
-import com.messenger.mango.web.dto.PostsDto;
+import com.messenger.mango.domain.post.Post;
+import com.messenger.mango.domain.post.PostRepository;
+import com.messenger.mango.web.dto.PostDto;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PostsApiControllerTest {
+public class PostControllerTest {
 
     @LocalServerPort
     private int port;
@@ -31,27 +31,29 @@ public class PostsApiControllerTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private PostsRepository postsRepository;
+    private PostRepository postRepository;
+
+    public static final String baseUrl = "/mango/v1/post";
 
     @After
     public void cleanup() throws Exception {
-        postsRepository.deleteAll();
+        postRepository.deleteAll();
     }
 
     @Test
-    public void Posts_저장() throws Exception {
+    public void Post_저장() throws Exception {
         // given
         String title = "test title";
         String content = "test content";
         String author = "test author";
 
-        PostsDto.SaveRequest requestDto = PostsDto.SaveRequest.builder()
+        PostDto.SaveRequest requestDto = PostDto.SaveRequest.builder()
                 .title(title)
                 .content(content)
                 .author(author)
                 .build();
 
-        String url = "http://localhost:" + port + "/api/v1/posts";
+        String url = "http://localhost:" + port + baseUrl;
 
         // when
         ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, requestDto, Long.class);
@@ -60,36 +62,36 @@ public class PostsApiControllerTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isGreaterThan(0L);
 
-        List<Posts> all = postsRepository.findAll();
+        List<Post> all = postRepository.findAll();
         assertThat(all.get(0).getTitle()).isEqualTo(title);
         assertThat(all.get(0).getContent()).isEqualTo(content);
         assertThat(all.get(0).getAuthor()).isEqualTo(author);
     }
 
     @Test
-    public void Posts_수정() throws Exception {
+    public void Post_수정() throws Exception {
         // given
         String title = "test title";
         String content = "test content";
         String author = "test author";
-        Posts savedPosts = postsRepository.save(Posts.builder()
+        Post savedPost = postRepository.save(Post.builder()
                 .title(title)
                 .content(content)
                 .author(author)
                 .build());
 
-        Long updatedId = savedPosts.getId();
+        Long updatedId = savedPost.getId();
         String expectedTitle = "updated title";
         String expectedContent = "updated content";
 
-        PostsDto.UpdateRequest requestDto = PostsDto.UpdateRequest.builder()
+        PostDto.UpdateRequest requestDto = PostDto.UpdateRequest.builder()
                 .title(expectedTitle)
                 .content(expectedContent)
                 .build();
 
-        String url = "http://localhost:" + port + "/api/v1/posts/" + updatedId;
+        String url = "http://localhost:" + port + baseUrl + updatedId;
 
-        HttpEntity<PostsDto.UpdateRequest> requestEntity = new HttpEntity<>(requestDto);
+        HttpEntity<PostDto.UpdateRequest> requestEntity = new HttpEntity<>(requestDto);
 
         // when
         ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Long.class);
@@ -98,7 +100,7 @@ public class PostsApiControllerTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isGreaterThan(0L);
 
-        List<Posts> all = postsRepository.findAll();
+        List<Post> all = postRepository.findAll();
         assertThat(all.get(0).getTitle()).isEqualTo(expectedTitle);
         assertThat(all.get(0).getContent()).isEqualTo(expectedContent);
     }
