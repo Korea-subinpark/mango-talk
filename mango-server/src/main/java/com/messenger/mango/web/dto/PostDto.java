@@ -1,13 +1,13 @@
 package com.messenger.mango.web.dto;
 
-import com.messenger.mango.domain.posts.Posts;
+import com.messenger.mango.domain.post.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-public class PostsDto {
+public class PostDto {
 
     @Getter
     public static class Response {
@@ -19,7 +19,7 @@ public class PostsDto {
         private LocalDateTime createdDate;
         private LocalDateTime modifiedDate;
 
-        public Response(Posts entity) {
+        public Response(Post entity) {
             this.id = entity.getId();
             this.title = entity.getTitle();
             this.content = entity.getContent();
@@ -37,7 +37,7 @@ public class PostsDto {
         private String author;
         private LocalDateTime modifiedDate;
 
-        public ListResponse(Posts entity) {
+        public ListResponse(Post entity) {
             this.id = entity.getId();
             this.title = entity.getTitle();
             this.author = entity.getAuthor();
@@ -60,8 +60,8 @@ public class PostsDto {
             this.author = author;
         }
 
-        public Posts toEntity() {
-            return Posts.builder()
+        public Post toEntity() {
+            return Post.builder()
                     .title(title)
                     .content(content)
                     .author(author)
