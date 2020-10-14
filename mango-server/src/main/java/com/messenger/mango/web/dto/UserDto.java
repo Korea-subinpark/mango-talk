@@ -12,6 +12,12 @@ public class UserDto {
 
         private String username;
         private String password;
+
+        @Builder
+        public LoginRequest(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
     }
 
     @Getter
@@ -35,4 +41,14 @@ public class UserDto {
         }
     }
 
+    @Getter
+    public static class LoginResponse {
+
+        String token;
+
+        @Builder
+        public LoginResponse(String token) {
+            this.token = token;
+        }
+    }
 }

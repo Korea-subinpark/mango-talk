@@ -23,14 +23,16 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public String login(@RequestBody UserDto.LoginRequest request) {
+    public UserDto.LoginResponse login(@RequestBody UserDto.LoginRequest request) {
         User user = (User) userService.loadUserByUsername(request.getUsername());
         Authentication authentication = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword(), user.getAuthorities());
         authenticationManager.authenticate(authentication);
 
         String token = jwtTokenProvider.createToken(user.getUsername(), user.getUserRole());
 
-        return token;
+        return UserDto.LoginResponse.builder()
+                .token(token)
+                .build();
     }
 
 }
