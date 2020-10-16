@@ -7,6 +7,7 @@ export function handleBooleanChange(handler: (checked: boolean) => void) {
 
 // 타겟 엘리먼트의 value를 string 타입으로 표시하는 이벤트 핸들러
 export function handleStringChange(handler: (value: string) => void) {
+    // 타입 단언
     return (event: React.FormEvent<HTMLElement>) => handler((event.target as HTMLInputElement).value);
 }
 
