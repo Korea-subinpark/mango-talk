@@ -1,37 +1,51 @@
-buildscript {
-    ext { // 전역 변수 개념
-        springBootVersion = '2.1.7.RELEASE'
-    }
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-    }
+plugins {
+    id 'org.springframework.boot' version '2.3.4.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE' // 스프링 부트의 의존성들을 관리해 주는 플러그인
+    id 'org.asciidoctor.convert' version '1.5.8' // AsciiDoc 파일을 컨버팅하고 Build 폴더에 복사하기 위한 플러그인
+    id 'java'
 }
 
-// 플러그인 의존성들을 적용할 것인지를 결정하는 코드
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management' // 스프링 부트의 의존성들을 관리해 주는 플러그인
+group = 'com.messenger.mango'
+version = '1.0-SNAPSHOT'
+sourceCompatibility = '11' // 자바 버전
 
-group 'com.messenger.mango'
-version '1.0-SNAPSHOT'
-sourceCompatibility = 11
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
+ext {
+    set('snippetsDir', file("build/generated-snippets"))
+}
+
 dependencies {
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compile('org.springframework.boot:spring-boot-starter-security')
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile('io.jsonwebtoken:jjwt:0.9.1')
-    compile('org.projectlombok:lombok')
-    compile('org.mariadb.jdbc:mariadb-java-client')
-    testCompile('com.h2database:h2')
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.0'
+    implementation 'org.springframework.boot:spring-boot-starter-validation' // spring boot 2.3.0 부터 validation이 web-starter에서 분리됨
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'com.h2database:h2'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+test {
+    outputs.dir snippetsDir
+    useJUnitPlatform()
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    dependsOn test
 }

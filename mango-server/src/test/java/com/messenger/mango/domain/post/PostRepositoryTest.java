@@ -1,31 +1,33 @@
 package com.messenger.mango.domain.post;
 
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class PostRepositoryTest {
 
     @Autowired
     PostRepository postRepository;
 
-    @After
+    @AfterEach
     public void cleanup() {
         postRepository.deleteAll();
     }
 
     @Test
-    public void 게시글저장() {
+    @DisplayName("게시글을 저장한다")
+    public void savePost() {
         // given
         String title = "title";
         String content = "content";
@@ -49,7 +51,8 @@ public class PostRepositoryTest {
     }
 
     @Test
-    public void BaseTimeEntity_등록() {
+    @DisplayName("게시글이 등록될 때 BaseEntity까지 등록되는지 확인한다")
+    public void baseEntity() {
         // given
         String title = "test title";
         String content = "test content";
