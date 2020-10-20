@@ -19,7 +19,7 @@ repositories {
     mavenCentral()
 }
 
-ext {
+ext { // snippets 생성 위치를 지정한다
     set('snippetsDir', file("build/generated-snippets"))
 }
 
@@ -41,11 +41,18 @@ dependencies {
 }
 
 test {
-    outputs.dir snippetsDir
+    outputs.dir snippetsDir // 테스트가 실행될 때 snippets들이 snippetsDir 위치에 생성되게 한다
     useJUnitPlatform()
 }
 
 asciidoctor {
-    inputs.dir snippetsDir
-    dependsOn test
+    inputs.dir snippetsDir // 입력 snippets가 생성될 위치를 지정한다
+    dependsOn test // 문서가 만들어지기 전에 test가 실행되도록 한다
+}
+
+bootJar {
+    dependsOn asciidoctor // jar가 생성되기 전에 asciidoc 태스크가 실행되도록 한다
+    from("${asciidoctor.outputDir}/html5") { // jar static 폴더에 완성된 문서를 HTML로 생성한다
+        into 'static/docs'
+    }
 }

@@ -58,4 +58,14 @@ use of HTTP status codes.
 == Post
 
 === GET /{id}
-operation::post-find-one[snippets='http-request,path-parameters,http-response,response-fields'']
+==== Request
+CURL:
+include::{snippets}/post-find-one/curl-request.adoc[]
+Request Example:
+include::{snippets}/post-find-one/http-request.adoc[]
+
+==== Response
+Response Fields:
+include::{snippets}/post-find-one/response-fields.adoc[]
+Response Example:
+include::{snippets}/post-find-one/http-response.adoc[]
