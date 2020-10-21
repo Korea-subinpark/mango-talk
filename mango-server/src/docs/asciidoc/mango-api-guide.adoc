@@ -1,0 +1,71 @@
+= Mango Talk REST API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[overview]]
+== Overview
+
+[[overview-http-verbs]]
+=== HTTP verbs
+
+RESTful notes tries to adhere as closely as possible to standard HTTP and REST conventions in its
+use of HTTP verbs.
+
+|===
+| Verb | Usage
+
+| `GET`
+| 조회
+
+| `POST`
+| 생성
+
+| `PUT`
+| 수정
+
+| `DELETE`
+| 삭제
+|===
+
+[[overview-http-status-codes]]
+=== HTTP status codes
+
+RESTful notes tries to adhere as closely as possible to standard HTTP and REST conventions in its
+use of HTTP status codes.
+
+|===
+| Status code | Usage
+
+| `200 OK`
+| The request completed successfully
+
+| `201 Created`
+| A new resource has been created successfully. The resource's URI is available from the response's
+`Location` header
+
+| `400 Bad Request`
+| The request was malformed. The response body will include an error providing further information
+
+| `404 Not Found`
+| The requested resource did not exist
+|===
+
+[[Post]]
+== Post
+
+=== GET /{id}
+==== Request
+CURL:
+include::{snippets}/post-find-one/curl-request.adoc[]
+Request Example:
+include::{snippets}/post-find-one/http-request.adoc[]
+
+==== Response
+Response Fields:
+include::{snippets}/post-find-one/response-fields.adoc[]
+Response Example:
+include::{snippets}/post-find-one/http-response.adoc[]

@@ -1,0 +1,11 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+    show-sql: true
+
+  h2:
+    console:
+      enabled: true
