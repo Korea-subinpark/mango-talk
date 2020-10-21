@@ -2,7 +2,7 @@ import "./App.css";
 import React, { useState, useEffect } from 'react';
 import {Link, Route, Switch, BrowserRouter as Router} from 'react-router-dom';
 
-import { test } from "./api/login.t";
+import { authLogin, test } from "./api/login.t";
 import RouteAuthenticatedCheck from "./containers/RouteAuthenticatedCheck";
 import RouteAuthorizedCheck from "./containers/RouteAuthorizedCheck";
 
@@ -27,8 +27,10 @@ function App(props: AppProps) {
     const authenticated = user != null;
     // 로그인: user state의 setter를 통해 상태 갱신하는 함수
     const login = ({ email, password }: User) => {
-        const authUser: AuthUser = test({ email, password });
-        setUser(authUser);
+        const authUser: any = authLogin({ email, password });
+        authUser.then((response: any) => {
+           setUser({ email, authenticated });
+        });
     }
     // 로그아웃: user state를 null로 갱신하는 함수
     const logout = () => setUser(null);

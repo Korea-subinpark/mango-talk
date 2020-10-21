@@ -26,6 +26,7 @@ function LoginForm({ authenticated, login, location } : any) {
         try {
             login({ email, password })
         } catch (e) {
+            console.warn(e)
             alert("로그인에 실패했습니다.")
             setEmail(email)
             setPassword("")
