@@ -21,17 +21,17 @@ public class Chat extends BaseTimeEntity {
     private User sender;
 
     @ManyToOne
-    private User receiver;
+    private ChatRoom chatRoom;
 
     private String content;
 
     private boolean status;
 
     @Builder
-    public Chat(Long id, User sender, User receiver, String content, boolean status) {
+    public Chat(Long id, User sender, ChatRoom chatRoom, String content, boolean status) {
         this.id = id;
         this.sender = sender;
-        this.receiver = receiver;
+        this.chatRoom = chatRoom;
         this.content = content;
         this.status = status;
     }

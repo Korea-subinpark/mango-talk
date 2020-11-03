@@ -11,14 +11,14 @@ public class ChatDto {
     public static class SaveRequest {
 
         private String senderName;
-        private String receiverName;
         private String content;
+        private Long chatRoomId;
 
         @Builder
-        public SaveRequest(String senderName, String receiverName, String content) {
+        public SaveRequest(String senderName, String content, Long chatRoomId) {
             this.senderName = senderName;
-            this.receiverName = receiverName;
             this.content = content;
+            this.chatRoomId = chatRoomId;
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.messenger.mango.web.advice;
 
 import com.messenger.mango.common.ErrorCode;
+import com.messenger.mango.common.exception.NotFoundException;
 import com.messenger.mango.common.exception.PostNotFoundException;
 import com.messenger.mango.web.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,7 @@ import static org.springframework.http.ResponseEntity.status;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({PostNotFoundException.class, UsernameNotFoundException.class})
+    @ExceptionHandler({PostNotFoundException.class, UsernameNotFoundException.class, NotFoundException.class})
     public ResponseEntity<ErrorResponse> notFoundExceptionHandler(Exception ex) {
         return status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(ErrorCode.NOT_FOUND, ex.getMessage()));
