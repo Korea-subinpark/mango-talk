@@ -12,11 +12,11 @@ public class ChatRoomDto {
     @NoArgsConstructor
     public static class SaveRequest {
 
-        private List<String> users;
+        private List<String> userNames;
 
         @Builder
-        public SaveRequest(List<String> users) {
-            this.users = users;
+        public SaveRequest(List<String> userNames) {
+            this.userNames = userNames;
         }
     }
 }

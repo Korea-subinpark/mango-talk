@@ -27,7 +27,7 @@ public class ChatRoomService {
 
     @Transactional
     public Long save(ChatRoomDto.SaveRequest request) {
-        List<User> users = request.getUsers().stream()
+        List<User> users = request.getUserNames().stream()
                 .map(username -> (User) userService.loadUserByUsername(username))
                 .collect(Collectors.toList());
 
