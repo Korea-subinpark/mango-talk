@@ -21,4 +21,20 @@ public class ChatDto {
             this.chatRoomId = chatRoomId;
         }
     }
+
+    @Getter
+    @NoArgsConstructor
+    public static class Response {
+
+        private String content;
+        private String senderName;
+        private Long chatRoomId;
+
+        @Builder
+        public Response(String content, String senderName, Long chatRoomId) {
+            this.content = content;
+            this.senderName = senderName;
+            this.chatRoomId = chatRoomId;
+        }
+    }
 }

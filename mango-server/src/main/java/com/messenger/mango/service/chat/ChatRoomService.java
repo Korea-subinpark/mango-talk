@@ -31,7 +31,12 @@ public class ChatRoomService {
                 .map(username -> (User) userService.loadUserByUsername(username))
                 .collect(Collectors.toList());
 
+        String defaultChatRoomName = users.stream()
+                .map(user -> user.getUsername())
+                .collect(Collectors.joining(", "));
+
         ChatRoom chatRoom = ChatRoom.builder()
+                .name(defaultChatRoomName)
                 .users(users)
                 .build();
 
