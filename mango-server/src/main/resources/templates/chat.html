@@ -22,9 +22,18 @@
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 
 <script>
+    var sockJS = null;
+    var stompClient = null;
     $(function () {
-        var sockJS = null;
-        var stompClient = null;
+        sockJS = new SockJS("/stomp");
+        stompClient = Stomp.over(sockJS);
+
+        stompClient.connect({}, function(frame) {
+            stompClient.subscribe("/topic/echo", function (message) {
+                message = JSON.parse(message.body).message;
+                $('#chat').val(message);
+            });
+        });
     })
 
     function send() {
@@ -34,14 +43,7 @@
         stompClient = Stomp.over(sockJS);
 
         stompClient.connect({}, function(frame) {
-
             stompClient.send("/app/echo", {}, JSON.stringify({message: message}));
-
-            stompClient.subscribe("/topic/echo", function (message) {
-                message = JSON.parse(message.body).message;
-                $('#chat').val(message);
-            });
-
         })
 
     }
