@@ -1,10 +1,9 @@
 import "./App.css";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {Link, Route, Switch, BrowserRouter as Router} from 'react-router-dom';
 
-import { authLogin, test } from "./api/login.t";
+import { authLogin } from "./api/login.t";
 import RouteAuthenticatedCheck from "./containers/RouteAuthenticatedCheck";
-import RouteAuthorizedCheck from "./containers/RouteAuthorizedCheck";
 
 import UserInfo from './components/UserInfo';
 import LoginForm from "./components/LoginForm";
@@ -12,6 +11,8 @@ import LogoutButton from './components/LogoutButton';
 
 import {User} from "./models";
 import {AuthUser} from "./types";
+import ChatList from "./components/ChatList";
+import ChatRoom from "./components/ChatRoom";
 
 interface AppProps {
     version: string;
@@ -45,7 +46,12 @@ function App(props: AppProps) {
                     </Link>
                     {
                         authenticated ? (
+                            <>
+                            <Link to="/room/list">
+                                <button>chat list</button>
+                            </Link>
                             <LogoutButton logout={logout} />
+                            </>
                         ) : (
                             <Link to="/login">
                                 <button>Login</button>
@@ -71,6 +77,22 @@ function App(props: AppProps) {
                                 props => (
                                 <LoginForm authenticated={authenticated} login={login} {...props} />
                             )}
+                        />
+                        <Route
+                            path="/room/list"
+                            render={
+                                props => (
+                                    <ChatList authenticated={authenticated} {...props} />
+                                )
+                            }
+                        />
+                        <Route
+                            path="/chat/user/2"
+                            render={
+                                props => (
+                                    <ChatRoom />
+                                )
+                            }
                         />
                         {/*
                             Route 컴포넌트를 wrapping한 컴포넌트.
