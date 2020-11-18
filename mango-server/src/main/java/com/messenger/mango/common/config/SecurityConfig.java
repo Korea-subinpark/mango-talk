@@ -42,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests() // URI 마다 권한 설정
                 .antMatchers("/mango/v1/auth/login", "/mango/v1/user").permitAll()
+                .antMatchers("/", "/stomp/**", "/app/**").permitAll() // socket test를 위해 허용
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfig(jwtTokenProvider)); // JwtConfig 등록

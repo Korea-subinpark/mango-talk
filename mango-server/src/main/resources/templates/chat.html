@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p>안녕하세요. 손님</p>
+
+<div>
+    <span>메시지 전송</span>
+    <input type="text" id="message"> <button id="send" th:onclick="send()">전송</button>
+</div>
+
+<div>
+    <span>채팅창</span>
+    <textarea id="chat" readonly></textarea>
+</div>
+
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+
+<script>
+    var sockJS = null;
+    var stompClient = null;
+    $(function () {
+        sockJS = new SockJS("/stomp");
+        stompClient = Stomp.over(sockJS);
+
+        stompClient.connect({}, function(frame) {
+            stompClient.subscribe("/topic/echo", function (message) {
+                message = JSON.parse(message.body).message;
+                $('#chat').val(message);
+            });
+        });
+    })
+
+    function send() {
+        var message = $('#message').val();
+
+        sockJS = new SockJS("/stomp");
+        stompClient = Stomp.over(sockJS);
+
+        stompClient.connect({}, function(frame) {
+            stompClient.send("/app/echo", {}, JSON.stringify({message: message}));
+        })
+
+    }
+</script>
+</body>
+</html>

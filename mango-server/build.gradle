@@ -25,8 +25,11 @@ ext { // snippets 생성 위치를 지정한다
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.0'
     implementation 'org.springframework.boot:spring-boot-starter-validation' // spring boot 2.3.0 부터 validation이 web-starter에서 분리됨
