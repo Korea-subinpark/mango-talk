@@ -10,28 +10,35 @@ import {
     Card,
     Elevation
 } from '@blueprintjs/core';
-import OthersChatBlock from "./OthersChatBlock";
-import MyChatBlock from "./MyChatBlock";
 import {handleStringChange} from "./changeHandler";
-import {doSend, openChat} from "../api/chat.t";
+import {doSend, getChatList} from "../api/chat.t";
 import MyChatWrapper from "./MyChatWrapper";
+import OthersChatWrapper from "./OthersChatBlock";
 
 // blueprint css
 const styleMargin0 = { margin: 0 };
 const styleButtonDisabled = { border: "1px solid #e7d73d", color: "#bdb038", backgroundColor: "#feeb41" };
 const styleButtonEnabled = { border: "1px solid #e7d73d", color: "#222", boxShadow: "none", backgroundImage: "none", backgroundColor: "#feeb41" };
 
-function ChatRoom({ authenticated, login, location } : any) {
+function ChatRoom({ authenticated, login, location, roomId } : any) {
     const onFocus = () => {
         return {outline: "none"};
     }
-    // 두번째 인자로 빈 배열
-    useEffect(() => {
-        openChat();
-    }, []);
+
     const [chat, setChat] = useState("");
     const [chatList, setChatList] = useState([]);
     const onSetChat = handleStringChange(chat => {setChat(chat)});
+
+    useEffect(() => {
+        // 채팅방의 번호
+        getChatList(roomId).then((response) => {
+            for (const text of chatList) {
+                // setChatList.push(text);
+                // TODO
+            }
+        });
+    }, []);
+
     const onClickSendButton = () => {
         if (chat === "") {
             return;
@@ -57,7 +64,7 @@ function ChatRoom({ authenticated, login, location } : any) {
             <Card interactive={false} elevation={Elevation.TWO}>
                 <div className="chatRoom-container">
                     <div className="chatRoom-wrapper">
-                        <OthersChatBlock text="." />
+                        <OthersChatWrapper text="." />
                         <MyChatWrapper list={chatList} />
                     </div>
                     <div className="chat-input">

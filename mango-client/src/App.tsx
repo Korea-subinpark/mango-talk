@@ -1,8 +1,8 @@
 import "./App.css";
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link, Route, Switch, BrowserRouter as Router} from 'react-router-dom';
 
-import { authLogin } from "./api/login.t";
+import {authLogin, authSignup} from "./api/login.t";
 import RouteAuthenticatedCheck from "./containers/RouteAuthenticatedCheck";
 
 import UserInfo from './components/UserInfo';
@@ -13,6 +13,7 @@ import {User} from "./models";
 import {AuthUser} from "./types";
 import ChatList from "./components/ChatList";
 import ChatRoom from "./components/ChatRoom";
+import {openChat} from "./api/chat.t";
 
 interface AppProps {
     version: string;
@@ -26,11 +27,20 @@ function App(props: AppProps) {
     const [user, setUser] = useState<AuthUser | null>(null);
     // 권한 체크
     const authenticated = user != null;
+    // 회원 가입
+    const signup = ({ email, password }: User) => {
+        const authUser: any = authSignup({ email, password});
+        authUser.then((response: any) =>{
+            alert("기입 완료");
+        });
+    }
     // 로그인: user state의 setter를 통해 상태 갱신하는 함수
     const login = ({ email, password }: User) => {
         const authUser: any = authLogin({ email, password });
         authUser.then((response: any) => {
            setUser({ email, authenticated });
+            // 두번째 인자로 빈 배열
+            openChat();
         });
     }
     // 로그아웃: user state를 null로 갱신하는 함수
@@ -53,9 +63,14 @@ function App(props: AppProps) {
                             <LogoutButton logout={logout} />
                             </>
                         ) : (
-                            <Link to="/login">
-                                <button>Login</button>
-                            </Link>
+                            <>
+                                <Link to="/login">
+                                    <button>Login</button>
+                                </Link>
+                                <Link to="/user">
+                                    <button>Signup</button>
+                                </Link>
+                            </>
                         )
                     }
                 </header>
@@ -79,6 +94,13 @@ function App(props: AppProps) {
                             )}
                         />
                         <Route
+                            path="/user"
+                            render={
+                                props => (
+                                    <LoginForm authenticated={authenticated} login={signup} {...props} />
+                                )}
+                        />
+                        <Route
                             path="/room/list"
                             render={
                                 props => (
@@ -87,10 +109,10 @@ function App(props: AppProps) {
                             }
                         />
                         <Route
-                            path="/chat/user/2"
+                            path="/chat/user/1"
                             render={
                                 props => (
-                                    <ChatRoom />
+                                    <ChatRoom roomId={1} />
                                 )
                             }
                         />

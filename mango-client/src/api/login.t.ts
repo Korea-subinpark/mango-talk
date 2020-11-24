@@ -22,6 +22,11 @@ const authLogin = ({ email, password }: User) => instance.post('/auth/login', { 
     return { email, authenticated: true }
 })
 
+const authSignup = ({ email, password }: User) => instance.post('/auth/user', { username: email, password}).then((response) => {
+    console.log(response.data)
+    setCookie(response.data.token);
+    return { email, authenticated: true }
+})
 function setCookie(token: cookie) {
     document.cookie = 'token=' + token;
 }
@@ -35,5 +40,5 @@ const test = ({ email, password }: User) => {
     return { email: user.email, authenticated: true }
 }
 export {
-    authLogin, test
+    authLogin, authSignup, test
 }

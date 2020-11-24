@@ -1,4 +1,12 @@
-var wsUri = "ws://localhost:3003/";
+import {User} from "../models";
+import Axios from "axios";
+
+const instance = Axios.create({
+    baseURL: 'http://localhost:8080/mango/v1',
+    timeout: 2000
+});
+
+var wsUri = "ws://localhost:8080/";
 let websocket: WebSocket;
 
 function onOpen(evt: any) {
@@ -9,7 +17,6 @@ function onClose(evt: any) {
     console.log("DISCONNECTED");
 }
 
-// echo
 function onMessage(evt: any) {
     console.log("RESPONSE: " + evt.data);
 }
@@ -31,6 +38,12 @@ const openChat = (() => {
     websocket.onerror = function(evt) { onError(evt) };
 });
 
+// FIXME chat list 모두 불러오기(url)
+const getChatList = ({ id }: any) => instance.post('/topic/chat', { id }).then((response) => {
+    console.log(response.data)
+    return { chatList: response.data }
+})
+
 export {
-    doSend, openChat, onMessage
+    doSend, openChat, onMessage, getChatList
 }
