@@ -22,7 +22,7 @@ function NavTop () {
                 <Link to="/userInfo">
                     <Button className="bp3-minimal" icon="home" text="Home" />
                 </Link>
-                <Link to="/chat/user/2">
+                <Link to="/chat/user/1">
                     <Button className="bp3-minimal" icon="chat" text="Chat" />
                 </Link>
             </Navbar.Group>

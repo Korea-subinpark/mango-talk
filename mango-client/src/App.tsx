@@ -40,7 +40,7 @@ function App(props: AppProps) {
         authUser.then((response: any) => {
            setUser({ email, authenticated });
             // 두번째 인자로 빈 배열
-            openChat();
+            openChat(email);
         });
     }
     // 로그아웃: user state를 null로 갱신하는 함수

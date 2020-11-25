@@ -1,43 +1,64 @@
 import {User} from "../models";
 import Axios from "axios";
+import SockJS from "sockjs-client";
+import {Stomp} from "@stomp/stompjs";
 
 const instance = Axios.create({
     baseURL: 'http://localhost:8080/mango/v1',
     timeout: 2000
 });
 
-var wsUri = "ws://localhost:8080/";
-let websocket: WebSocket;
+var sockJS: WebSocket | null = null;
+var stompClient: any = null;
+var username = 'subin';
+var chatRoomId = 0;
 
-function onOpen(evt: any) {
-    doSend("WebSocket open");
-}
+const openChat = ((username: string) => {
+    username = username;
+    sockJS = new SockJS("http://localhost:8080/stomp");
+    stompClient = Stomp.over(sockJS);
 
-function onClose(evt: any) {
-    console.log("DISCONNECTED");
-}
-
-function onMessage(evt: any) {
-    console.log("RESPONSE: " + evt.data);
-}
-
-function onError(evt: any) {
-    console.log("ERROR: " + evt.data);
-}
-
-function doSend(message: any) {
-    console.log("SENT: " + message);
-    websocket.send(message);
-}
-// WebSocket init - event binding
-const openChat = (() => {
-    websocket = new WebSocket(wsUri);
-    websocket.onopen = function(evt) { onOpen(evt) };
-    websocket.onclose = function(evt) { onClose(evt) };
-    websocket.onmessage = function(evt) { onMessage(evt) };
-    websocket.onerror = function(evt) { onError(evt) };
+    stompClient.connect({}, function () {
+        console.log("open chat !!")
+        if (username === 'admin' || username === 'subin') {
+            chatRoomId = 1;
+        }
+    });
 });
+function checkSocketNull() {
+    return sockJS ? true : false;
+}
+function doSubscribe(chatRoomId: any) {
+    var url = '/topic/chat/' + chatRoomId;
+    if(stompClient == null) {
+        return;
+    }
+    stompClient.subscribe(url, function (message: any) {
+        var content = JSON.parse(message.body).content;
+        console.log("메시지: " + content)
+        return content;
+    });
+}
+function doSend(message: any) {
+    const content = message;
 
+    // FIXME 전역 객체 확인
+    sockJS = new SockJS("http://localhost:8080/stomp");
+    stompClient = Stomp.over(sockJS);
+
+    if (username === 'admin' || username === 'subin') {
+        chatRoomId = 1;
+    }
+
+    var request = {
+        senderName: username,
+        content: content,
+        chatRoomId: chatRoomId
+    }
+    stompClient.connect({}, function () {
+        stompClient.send("/app/chat", {}, JSON.stringify(request));
+    })
+}
 // FIXME chat list 모두 불러오기(url)
 const getChatList = ({ id }: any) => instance.post('/topic/chat', { id }).then((response) => {
     console.log(response.data)
@@ -45,5 +66,5 @@ const getChatList = ({ id }: any) => instance.post('/topic/chat', { id }).then((
 })
 
 export {
-    doSend, openChat, onMessage, getChatList
+    checkSocketNull, doSubscribe, doSend, openChat, getChatList
 }
