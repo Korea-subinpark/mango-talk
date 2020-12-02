@@ -6,39 +6,26 @@ const instance = Axios.create({
     timeout: 2000
 });
 
-// FIXME: 가데이터. 수정 필요.
-let store: User[] = [
-    { password: '1234', email: 'kwj@naver.com' },
-    { password: '1234', email: 'asd' },
-]
 // cookie type
 interface cookie {
     token: string;
 }
 
-const authLogin = ({ email, password }: User) => instance.post('/auth/login', { username: email, password}).then((response) => {
+const authLogin = ({ username, password }: User) => instance.post('/auth/login', { username: username, password}).then((response) => {
     console.log(response.data)
     setCookie(response.data.token);
-    return { email, authenticated: true }
+    return { username, authenticated: true }
 })
 
-const authSignup = ({ email, password }: User) => instance.post('/auth/user', { username: email, password}).then((response) => {
+const authSignup = ({ username, password }: User) => instance.post('/auth/user', { username: username, password}).then((response) => {
     console.log(response.data)
     setCookie(response.data.token);
-    return { email, authenticated: true }
+    return { username, authenticated: true }
 })
 function setCookie(token: cookie) {
     document.cookie = 'token=' + token;
 }
 
-// test module
-const test = ({ email, password }: User) => {
-    const user = store.find(
-        (user) => user.email === email && user.password === password
-    )
-    if (user === undefined) throw new Error()
-    return { email: user.email, authenticated: true }
-}
 export {
-    authLogin, authSignup, test
+    authLogin, authSignup
 }

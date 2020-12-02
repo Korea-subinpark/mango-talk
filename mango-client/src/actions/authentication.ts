@@ -14,7 +14,7 @@ export function loginRequest(user: User) {
         dispatch(login());
         return Axios.post('/login', user).then((response) => {
             console.log(response.data)
-            dispatch(loginSuccess(user.email));
+            dispatch(loginSuccess(user.username));
         }).catch((error) => {
             dispatch(loginFailure());
         })
@@ -28,10 +28,10 @@ export function login() {
     }
 }
 
-export function loginSuccess(email: string) {
+export function loginSuccess(username: string) {
     return {
         type: AUTH_SUCCESS,
-        email
+        username
     }
 }
 

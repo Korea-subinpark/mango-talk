@@ -1,5 +1,4 @@
-import React, { useState } from "react"
-import { Redirect } from "react-router-dom"
+import React from "react"
 
 import 'normalize.css';
 import '@blueprintjs/core/lib/css/blueprint.css';
@@ -9,47 +8,22 @@ import {
     FormGroup,
     InputGroup
 } from '@blueprintjs/core';
-import { handleStringChange } from './changeHandler';
 
 
-function LoginForm({ authenticated, login, location } : any) {
-
-    // state에 email, password 생성
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-
-    // 값이 입력될 때마다 state에 적용
-    const onSetEmail = handleStringChange(email => setEmail(email));
-    const onSetPassword = handleStringChange(password => setPassword(password));
-
-    const onClickLoginButton = () => {
-        try {
-            login({ email, password })
-        } catch (e) {
-            console.warn(e)
-            alert("로그인에 실패했습니다.")
-            setEmail(email)
-            setPassword("")
-        }
-    }
-
-    const { from } = location.state || { from: { pathname: "/" } }
-    if (authenticated) return <Redirect to={from} />
+function LoginForm({ username, password, onSetUsername, onSetPassword, onClickLoginButton  } : any) {
 
     return (
-        // Fragments 컴포넌트 React.Fragment
-        // DOM에 별도의 노드를 추가하지 않고 자식 컴포넌트를 그룹화할 수 있음.
         <>
             <h1>Login</h1>
             <FormGroup className='login-form'>
                 {/* 유저 이메일 */}
                 <InputGroup
-                    id='email'
+                    id='username'
                     className='bp3-input-group margin-bottom-10'
                     placeholder='Mango-Talk ID'
                     type='text'
-                    value={ email }
-                    onChange={ onSetEmail }
+                    value={ username }
+                    onChange={ onSetUsername }
                 />
                 {/* 유저 패스워드 */}
                 <InputGroup

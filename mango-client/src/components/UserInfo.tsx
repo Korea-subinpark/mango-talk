@@ -1,11 +1,11 @@
 import React from "react"
 
 function userInfo({ user }: any) {
-    const { email, password } = user || {}
+    const { username, password } = user || {}
     return (
         <>
             <h1>userInfo</h1>
-            <p>email: {email}</p>
+            <p>username: {username}</p>
             <p>Password: {password}</p>
         </>
     )

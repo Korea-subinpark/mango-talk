@@ -1,5 +1,5 @@
 // TODO: payload info: ex> token expired date
 export interface AuthUser {
-    email: string;
+    username: string;
     authenticated: boolean;
 }
