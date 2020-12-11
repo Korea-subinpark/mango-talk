@@ -1,53 +1,69 @@
 import "./App.css";
-import React, {useEffect, useState} from 'react';
-import {Link, Route, Switch, BrowserRouter as Router} from 'react-router-dom';
+import React, {useEffect} from "react";
+import {Link, Route, Switch, BrowserRouter as Router} from "react-router-dom";
 
-import {authLogin, authSignup} from "./api/login.t";
+import {authLogin} from "./api/login.t";
 import RouteAuthenticatedCheck from "./containers/RouteAuthenticatedCheck";
 
-import UserInfo from './components/UserInfo';
+import UserInfo from "./components/UserInfo";
 import LoginFormContainer from "./containers/LoginFormContainer";
-import LogoutButton from './components/LogoutButton';
+import LogoutButton from "./components/LogoutButton";
 
 import {User} from "./models";
-import {AuthUser} from "./types";
 import ChatList from "./components/ChatList";
 import ChatRoom from "./components/ChatRoom";
-import {openChat} from "./api/chat.t";
+import {openConnection} from "./api/chat.t";
 
-import { Provider } from 'react-redux';
-import store from './store';
+import {Provider, useDispatch, useSelector} from "react-redux";
+import store from "./store";
+import {loginSuccess, logout} from "./store/modules/login";
+import {setStompClient} from "./store/modules/chat";
 
 interface AppProps {
     version: string;
     contributor: string[];
 }
-function App(props: AppProps) {
-    const contributors = ['woojoong.kim', 'subin.park'];
-    const version = '1.0.0';
+function getCookie(name: string){
+    const reg = new RegExp(name + "=([^;]*)");
+    const result = reg.test(document.cookie) ? unescape(RegExp.$1) : "";
+    console.log("cookie: " + result);
+    return result;
+}
 
-    // user는 User타입의 객체 혹은 null타입
-    const [user, setUser] = useState<AuthUser | null>(null);
-    // 권한 체크
-    const authenticated = user != null;
-    // 회원 가입
-    const signup = ({ username, password }: User) => {
-        const authUser: any = authSignup({ username, password});
-        authUser.then((response: any) =>{
-            alert("기입 완료");
-        });
-    }
-    // 로그인: user state의 setter를 통해 상태 갱신하는 함수
+    /* state getter */
+function App(props: AppProps) {
+    //login
+    // TODO Auth check detail(cookie check, state check...)
+    let isAuthenticated = getCookie("token") !== "";
+    console.log("isAuthenticated: 38 : " + isAuthenticated)
+    // let stompClient = useSelector((state: any) => state.chat.stompClient);
+    let username = useSelector((state: any) => state.login.username);
+    let client: any = useSelector((state: any) => state.chat.stompClient);
+    /* state dispatcher */
+    const dispatch = useDispatch();
+    // login
+    const handleLoginSuccess = (userInfo: any) => dispatch(loginSuccess(userInfo));
+    const handleLogout = () => dispatch(logout());
+    // chat
+    const handleCreateSocket = (stompClient: any) => dispatch(setStompClient(stompClient));
+
+    // refresh, re-rendering 시 소켓 연결
+    useEffect(() => {
+        console.log("isAuthenticated: 52 : " + isAuthenticated)
+        if (isAuthenticated) {
+            client = openConnection();
+            console.log(client)
+            handleCreateSocket(client);
+        }
+    }, []);
+
+    // 로그인
     const login = ({ username, password }: User) => {
         const authUser: any = authLogin({ username, password });
         authUser.then((response: any) => {
-           setUser({ username, authenticated });
-            // 두번째 인자로 빈 배열
-            openChat(username);
+            handleLoginSuccess(response);
         });
     }
-    // 로그아웃: user state를 null로 갱신하는 함수
-    const logout = () => setUser(null);
 
     return (
         <Provider store={store}>
@@ -59,12 +75,12 @@ function App(props: AppProps) {
                             <button>userInfo</button>
                         </Link>
                         {
-                            authenticated ? (
+                            isAuthenticated ? (
                                 <>
                                 <Link to="/room/list">
                                     <button>chat list</button>
                                 </Link>
-                                <LogoutButton logout={logout} />
+                                <LogoutButton logout={handleLogout} />
                                 </>
                             ) : (
                                 <>
@@ -94,14 +110,14 @@ function App(props: AppProps) {
                                 path="/login"
                                 render={
                                     props => (
-                                    <LoginFormContainer authenticated={authenticated} login={login} {...props} />
+                                    <LoginFormContainer isAuthenticated={isAuthenticated} login={login} {...props} />
                                 )}
                             />
                             <Route
                                 path="/room/list"
                                 render={
                                     props => (
-                                        <ChatList authenticated={authenticated} {...props} />
+                                        <ChatList isAuthenticated={isAuthenticated} {...props} />
                                     )
                                 }
                             />
@@ -109,7 +125,7 @@ function App(props: AppProps) {
                                 path="/chat/user/1"
                                 render={
                                     props => (
-                                        <ChatRoom roomId={1} />
+                                        <ChatRoom stompClient={client} isAuthenticated={isAuthenticated} roomId={1} />
                                     )
                                 }
                             />
@@ -118,9 +134,9 @@ function App(props: AppProps) {
                                 authenticated일 때 유저 정보로 이동.
                             */}
                             <RouteAuthenticatedCheck
-                                authenticated={authenticated}
+                                isAuthenticated={isAuthenticated}
                                 path="/userInfo"
-                                render={(props: any) => <UserInfo user={user} {...props} />}
+                                render={(props: any) => <UserInfo user={username} {...props} />}
                             />
                         </Switch>
                     </main>

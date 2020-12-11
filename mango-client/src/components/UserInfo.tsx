@@ -1,12 +1,11 @@
-import React from "react"
+import React from "react";
 
-function userInfo({ user }: any) {
-    const { username, password } = user || {}
+function userInfo({userInfo}: any) {
+    const { username } = userInfo || {};
     return (
         <>
             <h1>userInfo</h1>
             <p>username: {username}</p>
-            <p>Password: {password}</p>
         </>
     )
 }

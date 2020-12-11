@@ -11,7 +11,7 @@ import {
     Elevation
 } from '@blueprintjs/core';
 import {handleStringChange} from "./changeHandler";
-import {checkSocketNull, doSend, doSubscribe, getChatList} from "../api/chat.t";
+import {checkSocketNull, doSend} from "../api/chat.t";
 import MyChatWrapper from "./MyChatWrapper";
 import OthersChatWrapper from "./OthersChatBlock";
 
@@ -20,17 +20,17 @@ const styleMargin0 = { margin: 0 };
 const styleButtonDisabled = { border: "1px solid #e7d73d", color: "#bdb038", backgroundColor: "#feeb41" };
 const styleButtonEnabled = { border: "1px solid #e7d73d", color: "#222", boxShadow: "none", backgroundImage: "none", backgroundColor: "#feeb41" };
 
-function ChatRoom({ authenticated, login, location, roomId } : any) {
+function ChatRoom({ stompClient, isAuthenticated, login, location, roomId } : any) {
     const onFocus = () => {
         return {outline: "none"};
     }
-
     const [chat, setChat] = useState("");
     const [chatList, setChatList] = useState([]);
     const onSetChat = handleStringChange(chat => {setChat(chat)});
 
     useEffect(() => {
-        doSubscribe(roomId);
+
+        // openChat(roomId);
         // 채팅방의 번호
         // getChatList(roomId).then((response) => {
         //     for (const text of chatList) {
@@ -45,7 +45,7 @@ function ChatRoom({ authenticated, login, location, roomId } : any) {
         try {
             // send API
             console.log("chat room test: " + chat);
-            doSend(chat);
+            doSend(chat, stompClient);
             for (const text of chatList) {
                 myChatList.push(text);
             }
@@ -58,7 +58,7 @@ function ChatRoom({ authenticated, login, location, roomId } : any) {
         }
     }
     const isSocketNull = () => {
-        alert(checkSocketNull());
+        alert(checkSocketNull(stompClient) ? "연결됨" : "연결 안됨");
         if (chat === "") {
             return;
         }
@@ -67,7 +67,7 @@ function ChatRoom({ authenticated, login, location, roomId } : any) {
         <>
             <Card interactive={false} elevation={Elevation.TWO}>
                 <div className="chatRoom-container">
-                    <button onClick={isSocketNull}>asassadasa</button>
+                    <button onClick={isSocketNull}>소켓 null 체크</button>
                     <div className="chatRoom-wrapper">
                         <OthersChatWrapper text="." />
                         <MyChatWrapper list={chatList} />

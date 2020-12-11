@@ -1,4 +1,3 @@
-import {User} from "../models";
 import Axios from "axios";
 import SockJS from "sockjs-client";
 import {Stomp} from "@stomp/stompjs";
@@ -8,49 +7,36 @@ const instance = Axios.create({
     timeout: 2000
 });
 
+const SOCKET_URL = "http://localhost:8080/stomp";
+
 var sockJS: WebSocket | null = null;
-var stompClient: any = null;
 var username = 'subin';
 var chatRoomId = 0;
 
-const openChat = ((username: string) => {
-    username = username;
-    sockJS = new SockJS("http://localhost:8080/stomp");
-    stompClient = Stomp.over(sockJS);
+const openConnection = () => {
+    return Stomp.over(new SockJS(SOCKET_URL));
+}
 
+const openChat = ((stompClient: any, chatRoomId: any) => {
     stompClient.connect({}, function () {
-        console.log("open chat !!")
-        if (username === 'admin' || username === 'subin') {
-            chatRoomId = 1;
-        }
+        // TODO
     });
 });
-function checkSocketNull() {
-    return sockJS ? true : false;
+function checkSocketNull(stompClient: WebSocket) {
+    console.log(stompClient)
+    return stompClient ? true : false;
 }
-function doSubscribe(chatRoomId: any) {
-    var url = '/topic/chat/' + chatRoomId;
-    if(stompClient == null) {
-        return;
-    }
-    stompClient.subscribe(url, function (message: any) {
-        var content = JSON.parse(message.body).content;
+function doSubscribe(stompClient: any) {
+    console.log(stompClient)
+    stompClient.subscribe('/topic/chat/', function (message: any) {
+        const content = JSON.parse(message.body).content;
         console.log("메시지: " + content)
         return content;
     });
 }
-function doSend(message: any) {
+function doSend(message: any, stompClient: any) {
     const content = message;
-
-    // FIXME 전역 객체 확인
-    sockJS = new SockJS("http://localhost:8080/stomp");
-    stompClient = Stomp.over(sockJS);
-
-    if (username === 'admin' || username === 'subin') {
-        chatRoomId = 1;
-    }
-
-    var request = {
+    const request = {
         senderName: username,
         content: content,
         chatRoomId: chatRoomId
@@ -61,10 +47,9 @@ function doSend(message: any) {
 }
 // FIXME chat list 모두 불러오기(url)
 const getChatList = ({ id }: any) => instance.post('/topic/chat', { id }).then((response) => {
-    console.log(response.data)
     return { chatList: response.data }
 })
 
 export {
-    checkSocketNull, doSubscribe, doSend, openChat, getChatList
+    openConnection, checkSocketNull, doSubscribe, doSend, openChat, getChatList
 }

@@ -1,10 +1,10 @@
-import React from "react"
-import { withRouter } from "react-router-dom"
+import React from "react";
+import {withRouter} from "react-router-dom";
 
-function LogoutButton({ logout, history }: any) {
+function LogoutButton({logout, history}: any) {
     const onClickLogoutButton = () => {
-        logout()
-        history.push("/login")
+        logout();
+        history.go("/login");
     }
     return <button onClick={onClickLogoutButton}>Logout</button>
 }

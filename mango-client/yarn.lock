@@ -1393,6 +1393,11 @@
   resolved "https://registry.yarnpkg.com/@sheerun/mutationobserver-shim/-/mutationobserver-shim-0.3.3.tgz#5405ee8e444ed212db44e79351f0c70a582aae25"
   integrity sha512-DetpxZw1fzPD5xUBrIAoplLChO2VB8DlL5Gg+I1IR9b2wPqYIca2WSUxL5g1vLeR4MsQq1NeWriXAVffV+U1Fw==
 
+"@stomp/stompjs@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@stomp/stompjs/-/stompjs-6.0.0.tgz#707f54032984bf74a1956abf1e5421d7b5bb8e19"
+  integrity sha512-mMTltM/I9MkoOQip89jh/8P53IC50I4T87/chSxJDX4aNInRSpKxSZ/f7umjWPvYfrqcRTpFmKa7Z4cp2iojng==
+
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-4.2.0.tgz#dadcb6218503532d6884b210e7f3c502caaa44b1"
@@ -1751,6 +1756,11 @@
   integrity sha1-gL8hB4N568lzh9vlbkRGe1Z3+oU=
   dependencies:
     redux-saga "*"
+
+"@types/sockjs-client@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@types/sockjs-client/-/sockjs-client-1.5.0.tgz#141020645b279b462cdf82fae54bbcba51c18368"
+  integrity sha512-r8ENXtljrt8U6knz4fWsiuUVrDk9nkBeJOePWCzUJDRS20MN/OWoZj+gbsPhWSXSXF1aUaS4iAE4xa5jCFW9Dw==
 
 "@types/stack-utils@^1.0.1":
   version "1.0.1"

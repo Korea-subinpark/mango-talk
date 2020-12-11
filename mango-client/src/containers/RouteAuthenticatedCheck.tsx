@@ -1,12 +1,12 @@
-import React, {Component} from "react"
+import React from "react"
 import {Route, Redirect} from "react-router-dom"
 
-export default function RouteAuthenticatedCheck({authenticated, Component: Component, render, ...rest}: any) {
+export default function ({isAuthenticated, Component, render, ...rest}: any) {
     return (
         <Route
             {...rest}
             render={
-                props => authenticated ? (
+                props => isAuthenticated ? (
                     render ? (
                         render(props)
                     ) : (<Component {...props} />)

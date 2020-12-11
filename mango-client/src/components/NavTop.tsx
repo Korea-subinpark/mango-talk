@@ -4,13 +4,7 @@ import {Link} from 'react-router-dom';
 import {
     Alignment,
     Button,
-    Classes,
-    H5,
-    Navbar,
-    NavbarDivider,
-    NavbarGroup,
-    NavbarHeading,
-    Switch,
+    Navbar
 } from "@blueprintjs/core";
 
 

@@ -12,19 +12,15 @@ interface cookie {
 }
 
 const authLogin = ({ username, password }: User) => instance.post('/auth/login', { username: username, password}).then((response) => {
-    console.log(response.data)
-    setCookie(response.data.token);
-    return { username, authenticated: true }
+    const token = 'token=' + response.data.token;
+    document.cookie = token;
+    return { username, token, isAuthenticated: true }
 })
 
 const authSignup = ({ username, password }: User) => instance.post('/auth/user', { username: username, password}).then((response) => {
     console.log(response.data)
-    setCookie(response.data.token);
-    return { username, authenticated: true }
+    return { username, isAuthenticated: true }
 })
-function setCookie(token: cookie) {
-    document.cookie = 'token=' + token;
-}
 
 export {
     authLogin, authSignup

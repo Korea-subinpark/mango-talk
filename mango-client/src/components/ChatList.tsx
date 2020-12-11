@@ -1,32 +1,29 @@
-import React from "react"
+import React from "react";
 
-import 'normalize.css';
-import '@blueprintjs/core/lib/css/blueprint.css';
-import '@blueprintjs/icons/lib/css/blueprint-icons.css';
-import {
-    Card,
-    Elevation
-} from '@blueprintjs/core';
+import "normalize.css";
+import "@blueprintjs/core/lib/css/blueprint.css";
+import "@blueprintjs/icons/lib/css/blueprint-icons.css";
+import {Card, Elevation} from "@blueprintjs/core";
 import NavTop from "./NavTop";
+import {doSubscribe} from "../api/chat.t";
+import {useSelector} from "react-redux";
 
 
-function ChatList({ authenticated } : any) {
-    console.log("authenticated : " +  authenticated);
-
-
+function ChatList({isAuthenticated} : any) {
+    // const stompClient = useSelector((state: any) => state.chat.stompClient);
+    // console.log(stompClient)
+    // doSubscribe(stompClient);
     return (
-        // Fragments 컴포넌트 React.Fragment
-        // DOM에 별도의 노드를 추가하지 않고 자식 컴포넌트를 그룹화할 수 있음.
         // TODO - authenticated should be true
         <>
-            { authenticated ? (
+            { isAuthenticated ? (
                 <>
                     <NavTop />
                     <Card
                         className="list-body"
                         interactive={false}
                         elevation={Elevation.TWO}
-                    >
+                    >`
                     </Card>
                 </>
                 ) : (
