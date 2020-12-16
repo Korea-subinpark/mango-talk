@@ -16,7 +16,7 @@ import {openConnection} from "./api/chat.t";
 
 import {Provider, useDispatch, useSelector} from "react-redux";
 import store from "./store";
-import {loginSuccess, logout} from "./store/modules/login";
+import {loginSuccess, logout, socketTest} from "./store/modules/login";
 import {setStompClient} from "./store/modules/chat";
 
 interface AppProps {
@@ -47,6 +47,8 @@ function App(props: AppProps) {
     // chat
     const handleCreateSocket = (stompClient: any) => dispatch(setStompClient(stompClient));
 
+    const handleSocketTest = () => dispatch(socketTest());
+
     // refresh, re-rendering 시 소켓 연결
     useEffect(() => {
         console.log("isAuthenticated: 52 : " + isAuthenticated)
@@ -71,6 +73,7 @@ function App(props: AppProps) {
             <Router>
                 <div className="App">
                     <header className="App-header">
+                        <button onClick={handleSocketTest}>socket test</button>
                         <Link to="/userInfo">
                             <button>userInfo</button>
                         </Link>
