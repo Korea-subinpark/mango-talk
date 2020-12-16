@@ -26,7 +26,6 @@ interface AppProps {
 function getCookie(name: string){
     const reg = new RegExp(name + "=([^;]*)");
     const result = reg.test(document.cookie) ? unescape(RegExp.$1) : "";
-    console.log("cookie: " + result);
     return result;
 }
 
@@ -35,10 +34,7 @@ function App(props: AppProps) {
     //login
     // TODO Auth check detail(cookie check, state check...)
     let isAuthenticated = getCookie("token") !== "";
-    console.log("isAuthenticated: 38 : " + isAuthenticated)
-    // let stompClient = useSelector((state: any) => state.chat.stompClient);
     let username = useSelector((state: any) => state.login.username);
-    let client: any = useSelector((state: any) => state.chat.stompClient);
     /* state dispatcher */
     const dispatch = useDispatch();
     // login
@@ -47,15 +43,11 @@ function App(props: AppProps) {
     // chat
     const handleCreateSocket = (stompClient: any) => dispatch(setStompClient(stompClient));
 
-    // refresh, re-rendering 시 소켓 연결
     useEffect(() => {
-        console.log("isAuthenticated: 52 : " + isAuthenticated)
         if (isAuthenticated) {
-            client = openConnection();
-            console.log(client)
-            handleCreateSocket(client);
+            handleCreateSocket(openConnection());
         }
-    }, []);
+    });
 
     // 로그인
     const login = ({ username, password }: User) => {
@@ -67,7 +59,7 @@ function App(props: AppProps) {
 
     return (
         <Provider store={store}>
-            {/*// ReactRouter로 Browser 내장 API와 연동할 수 있다. ex> 즐겨찾기, 뒤로가기, 새로고침, url 주소로 이동*/}
+            {/* ReactRouter로 Browser 내장 API와 연동할 수 있다. ex> 즐겨찾기, 뒤로가기, 새로고침, url 주소로 이동*/}
             <Router>
                 <div className="App">
                     <header className="App-header">
@@ -125,7 +117,7 @@ function App(props: AppProps) {
                                 path="/chat/user/1"
                                 render={
                                     props => (
-                                        <ChatRoom stompClient={client} isAuthenticated={isAuthenticated} roomId={1} />
+                                        <ChatRoom isAuthenticated={isAuthenticated} roomId={1} />
                                     )
                                 }
                             />

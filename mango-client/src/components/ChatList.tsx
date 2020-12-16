@@ -10,9 +10,9 @@ import {useSelector} from "react-redux";
 
 
 function ChatList({isAuthenticated} : any) {
-    // const stompClient = useSelector((state: any) => state.chat.stompClient);
-    // console.log(stompClient)
-    // doSubscribe(stompClient);
+    const stompClient = useSelector((state: any) => state.chat.stompClient);
+
+    doSubscribe(stompClient);
     return (
         // TODO - authenticated should be true
         <>
@@ -23,7 +23,7 @@ function ChatList({isAuthenticated} : any) {
                         className="list-body"
                         interactive={false}
                         elevation={Elevation.TWO}
-                    >`
+                    >
                     </Card>
                 </>
                 ) : (
