@@ -48,7 +48,7 @@ function cookieRemove() {
 export default function reducer(state = initialState, action: any) {
     switch(action.type) {
         case LOGIN_SUCCESS:
-            return { username: action.payload.username, token: action.payload.token, password: '', isAuthenticated: true };;
+            return { username: action.payload.username, token: action.payload.token, password: '', isAuthenticated: true };
         case LOGOUT:
             cookieRemove();
             console.log("안됨?")

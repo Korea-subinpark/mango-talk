@@ -9,26 +9,23 @@ const instance = Axios.create({
 
 const SOCKET_URL = "http://localhost:8080/stomp";
 
-var sockJS: WebSocket | null = null;
-var username = 'subin';
-var chatRoomId = 0;
-
 const openConnection = () => {
     return Stomp.over(new SockJS(SOCKET_URL));
 }
+// TODO room list 받기
+const getRoomList = () => {
 
-const openChat = ((stompClient: any, chatRoomId: any) => {
-    stompClient.connect({}, function () {
-        // TODO
-    });
-});
-function checkSocketNull(stompClient: WebSocket) {
-    console.log(stompClient)
+}
+// @ts-ignore
+function checkSocketNull({ stompClient }) {
+    console.log(stompClient);
     return stompClient ? true : false;
 }
-function doSubscribe(stompClient: any) {
+// TODO room list 반복 돌면서 subscribe
+// @ts-ignore
+function doSubscribe({ stompClient }) {
     console.log(stompClient)
-    stompClient.subscribe('/topic/chat/', function (message: any) {
+    stompClient.subscribe('/topic/chat/1', function (message: any) {
         const content = JSON.parse(message.body).content;
         console.log("메시지: " + content)
         return content;
@@ -37,9 +34,9 @@ function doSubscribe(stompClient: any) {
 function doSend(message: any, stompClient: any) {
     const content = message;
     const request = {
-        senderName: username,
+        senderName: 'subin',
         content: content,
-        chatRoomId: chatRoomId
+        chatRoomId: 1
     }
     stompClient.connect({}, function () {
         stompClient.send("/app/chat", {}, JSON.stringify(request));
@@ -51,5 +48,5 @@ const getChatList = ({ id }: any) => instance.post('/topic/chat', { id }).then((
 })
 
 export {
-    openConnection, checkSocketNull, doSubscribe, doSend, openChat, getChatList
+    openConnection, checkSocketNull, doSubscribe, doSend, getChatList
 }

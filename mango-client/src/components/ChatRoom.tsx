@@ -14,20 +14,21 @@ import {handleStringChange} from "./changeHandler";
 import {checkSocketNull, doSend} from "../api/chat.t";
 import MyChatWrapper from "./MyChatWrapper";
 import OthersChatWrapper from "./OthersChatBlock";
+import {useSelector} from "react-redux";
 
 // blueprint css
 const styleMargin0 = { margin: 0 };
 const styleButtonDisabled = { border: "1px solid #e7d73d", color: "#bdb038", backgroundColor: "#feeb41" };
 const styleButtonEnabled = { border: "1px solid #e7d73d", color: "#222", boxShadow: "none", backgroundImage: "none", backgroundColor: "#feeb41" };
 
-function ChatRoom({ stompClient, isAuthenticated, login, location, roomId } : any) {
+function ChatRoom({ isAuthenticated, login, location, roomId } : any) {
     const onFocus = () => {
         return {outline: "none"};
     }
     const [chat, setChat] = useState("");
     const [chatList, setChatList] = useState([]);
     const onSetChat = handleStringChange(chat => {setChat(chat)});
-
+    const stompClient = useSelector((state: any) => state.chat);
     useEffect(() => {
 
         // openChat(roomId);
