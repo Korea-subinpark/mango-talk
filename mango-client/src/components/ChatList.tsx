@@ -12,6 +12,7 @@ import {useSelector} from "react-redux";
 function ChatList({isAuthenticated} : any) {
     const stompClient = useSelector((state: any) => state.chat.stompClient);
 
+    console.log(stompClient)
     doSubscribe(stompClient);
     return (
         // TODO - authenticated should be true
