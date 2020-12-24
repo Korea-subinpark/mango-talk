@@ -2,6 +2,8 @@ package com.messenger.mango.domain.users;
 
 import com.messenger.mango.domain.BaseTimeEntity;
 import com.messenger.mango.domain.UserRole;
+import com.messenger.mango.domain.chat.ChatRoom;
+import com.messenger.mango.domain.chat.ChatRoomUser;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,6 +37,13 @@ public class User extends BaseTimeEntity implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
+    @OneToMany(mappedBy = "chatRoom")
+    private List<ChatRoomUser> chatRooms = new ArrayList<>();
+
+    public void addChatRoom(ChatRoomUser chatRoom) {
+        chatRooms.add(chatRoom);
+    }
 
     @Builder
     public User(@NotEmpty String username, @NotEmpty String password, UserRole userRole) {

@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증 방식에는 세션이 필요없으므로 세션 정책을 Stateless로 변경
                 .and()
                 .authorizeRequests() // URI 마다 권한 설정
-                .antMatchers("/mango/v1/auth/login", "/mango/v1/user").permitAll()
+                .antMatchers("/mango/v1/auth/login", "/mango/v1/user", "/mango/v1/user/chatRoom").permitAll()
                 .antMatchers("/", "/stomp/**", "/app/**").permitAll() // socket test를 위해 허용
                 .anyRequest().authenticated()
                 .and()

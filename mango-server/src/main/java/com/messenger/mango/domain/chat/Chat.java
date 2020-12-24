@@ -15,6 +15,7 @@ public class Chat extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "chat_id")
     private Long id;
 
     @ManyToOne
