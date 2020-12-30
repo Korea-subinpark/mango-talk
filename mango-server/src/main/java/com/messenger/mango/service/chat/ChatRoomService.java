@@ -4,6 +4,7 @@ import com.messenger.mango.common.exception.NotFoundException;
 import com.messenger.mango.domain.chat.ChatRoom;
 import com.messenger.mango.domain.chat.ChatRoomRepository;
 import com.messenger.mango.domain.chat.ChatRoomUser;
+import com.messenger.mango.domain.chat.ChatRoomUserRepository;
 import com.messenger.mango.domain.users.User;
 import com.messenger.mango.service.users.UserService;
 import com.messenger.mango.web.dto.ChatRoomDto;
@@ -20,6 +21,7 @@ public class ChatRoomService {
 
     private final UserService userService;
     private final ChatRoomRepository chatRoomRepository;
+    private final ChatRoomUserRepository chatRoomUserRepository;
 
     public List<ChatRoomDto.ListResponse> getChatRoomList(String username) {
         List<ChatRoom> chatRoomList = userService.getChatRoomList(username);
@@ -51,6 +53,7 @@ public class ChatRoomService {
 
         for (ChatRoomUser chatRoomUser : users) {
             chatRoomUser.setChatRoom(chatRoom);
+            chatRoomUserRepository.save(chatRoomUser);
         }
 
         return chatRoomRepository.save(chatRoom)
