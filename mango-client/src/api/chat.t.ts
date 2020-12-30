@@ -1,6 +1,6 @@
 import Axios from "axios";
 import SockJS from "sockjs-client";
-import {Stomp} from "@stomp/stompjs";
+import {Stomp, Versions, Client} from "@stomp/stompjs";
 
 const instance = Axios.create({
     baseURL: "http://localhost:8080/mango/v1",
@@ -11,31 +11,26 @@ const SOCKET_URL = "http://localhost:8080/stomp";
 const CHAT_LIST_URL = "http://localhost:8080/mango/v1/user/chatRoom";
 const SUBSCRIBE_URL = "http://localhost:8080/topic/chat";
 
-var sockJS: WebSocket | null = null;
 var username = 'subin';
 var chatRoomId = 0;
 
 const openConnection = () => {
-    // use a WebSocket
+    // Client 인스턴스 생성
+    const client = new Client();
+    // Client의 factory 정의
+    // @ts-ignore
     client.webSocketFactory = function () {
-        return new WebSocket("wss://broker.329broker.com:15674/ws");
+        const sock = new SockJS(SOCKET_URL);
+        console.log(sock)
+        return sock;
     };
-
-    // Typical usage with SockJS
-    // client.webSocketFactory = function () {
-    //     return new SockJS("http://broker.329broker.com/stomp");
-    // };
-    const sock = Stomp.over(new SockJS(SOCKET_URL));
-    console.log("-----------------------------------------------")
-    console.log(sock)
-    console.log("-----------------------------------------------")
-    return sock;
+    return client;
 }
 
-const openChat = ((stompClient: any, chatRoomId: any) => {
-    stompClient.connect({}, function () {
+const openChat = ((client: any, chatRoomId: any) => {
+    client.onConnect = function (frame: any) {
         // TODO
-    });
+    };
 });
 
 function getCookie(name: string){
@@ -49,32 +44,45 @@ function checkSocketNull(stompClient: WebSocket) {
     console.log(stompClient)
     return stompClient ? true : false;
 }
-
+const tempRoomList = (token: string): any => {
+    Axios.post("http://localhost:8080/mango/v1/chatRoom", {
+        "userNames": ["admin", "kim"]
+    }, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+}
 const getChatList = (token: string): any => {
+    console.log(token)
     const array = [1, 2, 3, 4];
     instance.get(CHAT_LIST_URL, {
         headers: {
             "Authorization": `Bearer ${token}`
         }
-    }).then((response: any) => {
+    }).then(({ data }: any) => {
+        console.log(data)
         console.log("then");
     }).catch(e => {
         console.log("catch");
     });
     return array;
 }
-async function doSubscribe(stompClient: any) {
+async function doSubscribe(client: any) {
+    await tempRoomList(getCookie("token"));
     const roomList = await getChatList(getCookie("token"));
     console.log(roomList)
-    for (let roomNum of roomList) {
-        console.log(stompClient)
+    client.onConnect = function (frame: any) {
+        for (let roomNum of roomList) {
+        console.log(roomNum)
+            client.subscribe(`SUBSCRIBE_URL/${roomNum}`, function (message: any) {
+                const content = JSON.parse(message.body).content;
+                console.log("메시지: " + content)
+                return content;
+            });
+        }
+    };
 
-        stompClient.subscribe(`SUBSCRIBE_URL/${roomNum}`, function (message: any) {
-            const content = JSON.parse(message.body).content;
-            console.log("메시지: " + content)
-            return content;
-        });
-    }
 }
 function doSend(message: any, stompClient: any) {
     const content = message;
@@ -89,5 +97,5 @@ function doSend(message: any, stompClient: any) {
 }
 
 export {
-    openConnection, checkSocketNull, doSubscribe, doSend, openChat, getChatList
+    openConnection, checkSocketNull, doSubscribe, doSend, openChat, getChatList, tempRoomList
 }
