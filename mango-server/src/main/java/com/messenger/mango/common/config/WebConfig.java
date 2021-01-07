@@ -18,6 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "PUT",
                         "DELETE",
                         "PATCH"
-                );
+                )
+                .maxAge(3600); // 3600초 동안 preflight 결과를 캐싱;
     }
 }
