@@ -2,6 +2,7 @@ package com.messenger.mango.service.users;
 
 import com.messenger.mango.domain.chat.ChatRoom;
 import com.messenger.mango.domain.chat.ChatRoomUser;
+import com.messenger.mango.domain.chat.ChatRoomUserRepository;
 import com.messenger.mango.domain.users.User;
 import com.messenger.mango.domain.users.UserRepository;
 import com.messenger.mango.web.dto.UserDto;
@@ -20,10 +21,11 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final ChatRoomUserRepository chatRoomUserRepository;
 
     public List<ChatRoom> getChatRoomList(String username) {
         User user = (User) loadUserByUsername(username);
-        return user.getChatRooms().stream()
+        return chatRoomUserRepository.findByUserId(user.getId()).stream()
                 .map(ChatRoomUser::getChatRoom)
                 .collect(Collectors.toList());
     }
