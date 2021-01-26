@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class ChatRoomService {
 
     private final UserService userService;
@@ -30,13 +31,19 @@ public class ChatRoomService {
                 .collect(Collectors.toList());
     }
 
+    public ChatRoomDto.Response getChatRoom(Long id) {
+        ChatRoom chatRoom = findById(id);
+
+        return new ChatRoomDto.Response(chatRoom);
+    }
+
     public ChatRoom findById(Long id) {
         return chatRoomRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("해당 채팅방이 없습니다. id=" + id));
     }
 
     @Transactional
-    public Long save(ChatRoomDto.SaveRequest request) {
+    public Long save(ChatRoomDto.SaveRequest request, String currentUsername) {
         List<ChatRoomUser> users = request.getUserNames().stream()
                 .map(username -> (User) userService.loadUserByUsername(username))
                 .map(ChatRoomUser::new)
@@ -44,6 +51,7 @@ public class ChatRoomService {
 
         String defaultChatRoomName = users.stream()
                 .map(user -> user.getUser().getUsername())
+                .filter(username -> !username.equals(currentUsername))
                 .collect(Collectors.joining(", "));
 
         ChatRoom chatRoom = ChatRoom.builder()

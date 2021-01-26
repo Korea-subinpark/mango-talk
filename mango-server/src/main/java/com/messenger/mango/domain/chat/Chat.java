@@ -22,6 +22,7 @@ public class Chat extends BaseTimeEntity {
     private User sender;
 
     @ManyToOne
+    @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
     private String content;

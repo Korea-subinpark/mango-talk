@@ -1,6 +1,5 @@
 package com.messenger.mango.domain.chat;
 
-import com.messenger.mango.domain.users.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
