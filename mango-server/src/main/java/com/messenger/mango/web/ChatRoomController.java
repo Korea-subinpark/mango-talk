@@ -1,12 +1,12 @@
 package com.messenger.mango.web;
 
-import com.messenger.mango.common.jwt.JwtTokenProvider;
+import com.messenger.mango.domain.users.User;
 import com.messenger.mango.service.chat.ChatRoomService;
 import com.messenger.mango.web.dto.ChatRoomDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,13 +17,10 @@ import java.util.Map;
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
-    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping
-    public Map<Long, ChatRoomDto.ListResponse> getChatRoomList(HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        String username = jwtTokenProvider.getUsername(token);
-        List<ChatRoomDto.ListResponse> chatRoomList = chatRoomService.getChatRoomList(username);
+    public Map<Long, ChatRoomDto.ListResponse> getChatRoomList(@AuthenticationPrincipal User user) {
+        List<ChatRoomDto.ListResponse> chatRoomList = chatRoomService.getChatRoomList(user.getUsername());
 
         Map<Long, ChatRoomDto.ListResponse> response = new HashMap<>();
         for (ChatRoomDto.ListResponse listResponse : chatRoomList) {
@@ -39,9 +36,7 @@ public class ChatRoomController {
     }
 
     @PostMapping
-    public Long save(@RequestBody ChatRoomDto.SaveRequest request, HttpServletRequest httpRequest) {
-        String token = jwtTokenProvider.resolveToken(httpRequest);
-        String username = jwtTokenProvider.getUsername(token);
-        return chatRoomService.save(request, username);
+    public Long save(@RequestBody ChatRoomDto.SaveRequest request, @AuthenticationPrincipal User user) {
+        return chatRoomService.save(request, user.getUsername());
     }
 }
