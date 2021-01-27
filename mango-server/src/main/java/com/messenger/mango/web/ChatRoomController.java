@@ -20,7 +20,7 @@ public class ChatRoomController {
 
     @GetMapping
     public Map<Long, ChatRoomDto.ListResponse> getChatRoomList(@AuthenticationPrincipal User user) {
-        List<ChatRoomDto.ListResponse> chatRoomList = chatRoomService.getChatRoomList(user.getUsername());
+        List<ChatRoomDto.ListResponse> chatRoomList = chatRoomService.getChatRoomDtoList(user.getUsername());
 
         Map<Long, ChatRoomDto.ListResponse> response = new HashMap<>();
         for (ChatRoomDto.ListResponse listResponse : chatRoomList) {

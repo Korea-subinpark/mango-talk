@@ -24,10 +24,17 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomUserRepository chatRoomUserRepository;
 
-    public List<ChatRoomDto.ListResponse> getChatRoomList(String username) {
-        List<ChatRoom> chatRoomList = userService.getChatRoomList(username);
+    public List<ChatRoomDto.ListResponse> getChatRoomDtoList(String username) {
+        List<ChatRoom> chatRoomList = getChatRoomList(username);
         return chatRoomList.stream()
                 .map(ChatRoomDto.ListResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<ChatRoom> getChatRoomList(String username) {
+        User user = (User) userService.loadUserByUsername(username);
+        return chatRoomUserRepository.findByUserId(user.getId()).stream()
+                .map(ChatRoomUser::getChatRoom)
                 .collect(Collectors.toList());
     }
 
