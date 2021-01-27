@@ -8,11 +8,8 @@ const instance = Axios.create({
 });
 
 const SOCKET_URL = "http://localhost:8080/stomp";
-const CHAT_LIST_URL = "http://localhost:8080/mango/v1/user/chatRoom";
+const CHAT_LIST_URL = "http://localhost:8080/mango/v1/chatRoom";
 const SUBSCRIBE_URL = "http://localhost:8080/topic/chat";
-
-var username = 'subin';
-var chatRoomId = 0;
 
 const openConnection = () => {
     // Client 인스턴스 생성
@@ -24,6 +21,9 @@ const openConnection = () => {
         console.log(sock)
         return sock;
     };
+    client.onConnect = function () {}
+    client.activate();
+    console.log("is connected? " + client.connected)
     return client;
 }
 
@@ -36,7 +36,7 @@ const openChat = ((client: any, chatRoomId: any) => {
 function getCookie(name: string){
     const reg = new RegExp(name + "=([^;]*)");
     const result = reg.test(document.cookie) ? unescape(RegExp.$1) : "";
-    console.log("cookie: " + result);
+    // console.log("cookie: " + result);
     return result;
 }
 
@@ -53,49 +53,47 @@ const tempRoomList = (token: string): any => {
         }
     });
 }
-const getChatList = (token: string): any => {
-    console.log(token)
-    const array = [1, 2, 3, 4];
-    instance.get(CHAT_LIST_URL, {
+const getChatList = (token: string) => {
+    return instance.get(CHAT_LIST_URL, {
         headers: {
             "Authorization": `Bearer ${token}`
         }
-    }).then(({ data }: any) => {
-        console.log(data)
-        console.log("then");
-    }).catch(e => {
-        console.log("catch");
     });
-    return array;
 }
-async function doSubscribe(client: any) {
-    await tempRoomList(getCookie("token"));
-    const roomList = await getChatList(getCookie("token"));
-    console.log(roomList)
-    client.onConnect = function (frame: any) {
+
+const doSubscribe = (client: any, roomList: any) => {
+    const stomp = client.stompClient;
+    console.log(stomp)
+    stomp.onConnect = function () {
         for (let roomNum of roomList) {
-        console.log(roomNum)
-            client.subscribe(`SUBSCRIBE_URL/${roomNum}`, function (message: any) {
+            stomp.subscribe(`SUBSCRIBE_URL/${roomNum}`, function (message: any) {
                 const content = JSON.parse(message.body).content;
                 console.log("메시지: " + content)
                 return content;
             });
         }
-    };
-
+    }
 }
-function doSend(message: any, stompClient: any) {
+
+function doSend(message: any, username: any, roomId: any, client: any) {
+    // Client의 factory 정의
+    // @ts-ignore
     const content = message;
     const request = {
         senderName: username,
         content: content,
-        chatRoomId: chatRoomId
-    }
-    stompClient.connect({}, function () {
-        stompClient.send("/app/chat", {}, JSON.stringify(request));
-    })
+        chatRoomId: roomId
+    };
+    client.subscribe(`SUBSCRIBE_URL/${roomId}`, function (message: any) {
+        const content = JSON.parse(message.body).content;
+        console.log("메시지: " + content)
+        return content;
+    });
+    console.log(client.connected)
+    client.publish({destination: "/app/chat", body: JSON.stringify(request)});
+
 }
 
 export {
-    openConnection, checkSocketNull, doSubscribe, doSend, openChat, getChatList, tempRoomList
+    openConnection, checkSocketNull, doSubscribe, doSend, openChat, getChatList, tempRoomList, getCookie
 }

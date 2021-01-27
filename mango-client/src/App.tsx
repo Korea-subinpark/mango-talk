@@ -10,7 +10,7 @@ import LoginFormContainer from "./containers/LoginFormContainer";
 import LogoutButton from "./components/LogoutButton";
 
 import {User} from "./models";
-import ChatList from "./components/ChatList";
+import ContentsContainer from "./components/ContentsContainer";
 import ChatRoom from "./components/ChatRoom";
 import {openConnection} from "./api/chat.t";
 
@@ -69,8 +69,8 @@ function App(props: AppProps) {
                         {
                             isAuthenticated ? (
                                 <>
-                                <Link to="/room/list">
-                                    <button>chat list</button>
+                                <Link to="/menu">
+                                    <button>menu open</button>
                                 </Link>
                                 <LogoutButton logout={handleLogout} />
                                 </>
@@ -106,18 +106,18 @@ function App(props: AppProps) {
                                 )}
                             />
                             <Route
-                                path="/room/list"
+                                path="/menu"
                                 render={
                                     props => (
-                                        <ChatList isAuthenticated={isAuthenticated} {...props} />
+                                        <ContentsContainer isAuthenticated={isAuthenticated} {...props} />
                                     )
                                 }
                             />
                             <Route
-                                path="/chat/user/1"
+                                path="/chat/user/:roomId"
                                 render={
                                     props => (
-                                        <ChatRoom isAuthenticated={isAuthenticated} roomId={1} />
+                                        <ChatRoom />
                                     )
                                 }
                             />
