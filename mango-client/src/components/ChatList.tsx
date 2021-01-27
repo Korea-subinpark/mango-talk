@@ -1,38 +1,40 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 
 import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
-import {Card, Elevation} from "@blueprintjs/core";
-import NavTop from "./NavTop";
-import {doSubscribe} from "../api/chat.t";
+import ChatThumb from "./ChatThumb";
+import {Link} from "react-router-dom";
+import {doSubscribe, getChatList, getCookie} from "../api/chat.t";
 import {useSelector} from "react-redux";
 
+function ChatList({list}: any) {
+    const keyList = Object.keys(list);
+    const stompClient = useSelector((state: any) => state.chat);
+    doSubscribe(stompClient, keyList);
+    const components: JSX.Element[] = [];
 
-function ChatList({isAuthenticated} : any) {
-    const stompClient = useSelector((state: any) => state.chat.stompClient);
-
-    console.log(stompClient)
-    doSubscribe(stompClient);
+    keyList.map((roomNo: any, i: any) => {
+        // const {username, ellipsis, lastReceivedDate} = list[roomNo];
+        const username = list[roomNo].username || "";
+        const ellipsis = list[roomNo].ellipsis || "";
+        const lastReceivedDate = list[roomNo].lastReceivedDate || "";
+        components.push(
+            <Link to={`/chat/user/${roomNo}`}>
+                <ChatThumb
+                    key={`${username}${i}`}
+                    username={username}
+                    ellipsis={ellipsis}
+                    lastReceivedDate={lastReceivedDate}
+                />
+            </Link>
+        )
+    });
     return (
-        // TODO - authenticated should be true
         <>
-            { isAuthenticated ? (
-                <>
-                    <NavTop />
-                    <Card
-                        className="list-body"
-                        interactive={false}
-                        elevation={Elevation.TWO}
-                    >
-                    </Card>
-                </>
-                ) : (
-                    <p>로그인 후 시도해주세요.</p>
-                )
-            }
+            {components}
         </>
-    )
+    );
 }
 
 export default ChatList

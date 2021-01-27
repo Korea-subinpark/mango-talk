@@ -139,8 +139,41 @@ input:focus {
   grid-template-columns: 85% 15%;
   background-color: #fff;
 }
+
 .btn-group-wrapper {
   background-color: #fff;
   height: 40px;
   width: 100%;
+}
+
+#sidebar-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background-color: #423630;
+}
+
+.bp3-tab-list {
+  width: 80px;
+}
+.bp3-tab {
+  height: 40px;
+}
+.bp3-tabs.bp3-vertical > .bp3-tab-panel {
+  width: 100% !important;
+  padding: 0 !important;
+}
+
+.bp3-tab[aria-selected="false"] {
+  color: #8E8683 !important;
+}
+
+.bp3-tab[aria-selected="true"] {
+  color: white !important;
+}
+
+.bp3-tab-panel {
+  background-color: white;
+
 }
