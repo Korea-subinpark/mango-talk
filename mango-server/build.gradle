@@ -59,3 +59,14 @@ bootJar {
         into 'static/docs'
     }
 }
+
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+    // 소스 코드에 html파일을 복사
+    from file("build/asciidoc/html5")
+    into file("src/main/resources/static/docs")
+}
+
+build {
+    dependsOn copyDocument
+}

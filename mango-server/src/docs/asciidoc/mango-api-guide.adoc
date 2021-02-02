@@ -54,18 +54,23 @@ use of HTTP status codes.
 | The requested resource did not exist
 |===
 
-[[Post]]
-== Post
+[[User]]
+== User
 
-=== GET /{id}
+=== Login
+
 ==== Request
-CURL:
-include::{snippets}/post-find-one/curl-request.adoc[]
+
 Request Example:
-include::{snippets}/post-find-one/http-request.adoc[]
+include::{snippets}/auth-login/http-request.adoc[]
+
+Request Fields:
+include::{snippets}/auth-login/request-fields.adoc[]
 
 ==== Response
-Response Fields:
-include::{snippets}/post-find-one/response-fields.adoc[]
+
 Response Example:
-include::{snippets}/post-find-one/http-response.adoc[]
+include::{snippets}/auth-login/http-response.adoc[]
+
+Response Fields:
+include::{snippets}/auth-login/response-fields.adoc[]

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -27,7 +29,12 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException("중복된 아이디입니다. username=" + requestDto.getUsername());
         }
 
-        return userRepository.save(requestDto.toEntity())
+        UserDto.SaveRequest encodedRequestDto = UserDto.SaveRequest.builder()
+                .username(requestDto.getUsername())
+                .password(passwordEncoder.encode(requestDto.getPassword()))
+                .build();
+
+        return userRepository.save(encodedRequestDto.toEntity())
                 .getId();
     }
 }

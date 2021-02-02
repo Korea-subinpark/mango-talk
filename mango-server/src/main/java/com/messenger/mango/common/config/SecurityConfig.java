@@ -1,7 +1,5 @@
 package com.messenger.mango.common.config;
 
-import com.messenger.mango.common.jwt.JwtConfig;
-import com.messenger.mango.common.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,8 +14,6 @@ import org.springframework.web.cors.CorsUtils;
 @RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
     @Override
@@ -43,11 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests() // URI 마다 권한 설정
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() // preflight request 허용
-                .antMatchers("/mango/v1/auth/login", "/mango/v1/user", "/mango/v1/user/chatRoom").permitAll()
+                .antMatchers("/mango/v1/auth/login", "/mango/v1/user", "/docs/mango-api-guide.html").permitAll()
                 .antMatchers("/", "/stomp/**", "/app/**").permitAll() // socket test를 위해 허용
-                .anyRequest().authenticated()
-                .and()
-                .apply(new JwtConfig(jwtTokenProvider)); // JwtConfig 등록
+                .anyRequest().authenticated();
         //@formatter:on
     }
 }
