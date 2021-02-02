@@ -5,12 +5,16 @@ import com.messenger.mango.domain.users.User;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.validation.constraints.NotEmpty;
+
 public class UserDto {
 
     @Getter
     public static class LoginRequest {
 
+        @NotEmpty(message = "ID는 필수 입력입니다.")
         private String username;
+        @NotEmpty(message = "비밀번호는 필수 입력입니다.")
         private String password;
 
         @Builder
@@ -23,7 +27,9 @@ public class UserDto {
     @Getter
     public static class SaveRequest {
 
+        @NotEmpty(message = "ID는 필수 입력입니다.")
         private String username;
+        @NotEmpty(message = "비밀번호는 필수 입력입니다.")
         private String password;
 
         @Builder

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RequiredArgsConstructor
 @RequestMapping("/mango/v1/auth")
 @RestController
@@ -23,7 +25,7 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public UserDto.LoginResponse login(@RequestBody UserDto.LoginRequest request) {
+    public UserDto.LoginResponse login(@RequestBody @Valid UserDto.LoginRequest request) {
         User user = (User) userService.loadUserByUsername(request.getUsername());
         Authentication authentication = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword(), user.getAuthorities());
         authenticationManager.authenticate(authentication);
