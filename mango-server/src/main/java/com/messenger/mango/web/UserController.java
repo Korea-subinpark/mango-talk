@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RequiredArgsConstructor
 @RequestMapping("/mango/v1/user")
 @RestController
@@ -18,7 +20,7 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping
-    public Long save(@RequestBody UserDto.SaveRequest requestDto) {
+    public Long save(@RequestBody @Valid UserDto.SaveRequest requestDto) {
         UserDto.SaveRequest encodedRequestDto = UserDto.SaveRequest.builder()
                 .username(requestDto.getUsername())
                 .password(passwordEncoder.encode(requestDto.getPassword()))

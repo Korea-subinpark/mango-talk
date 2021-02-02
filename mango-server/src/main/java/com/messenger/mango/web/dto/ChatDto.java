@@ -34,6 +34,7 @@ public class ChatDto {
         private String senderName;
         private Long chatRoomId;
         private LocalDateTime createdDate;
+        private boolean isOwner;
 
         public Response(Chat chat) {
             this.id = chat.getId();
@@ -41,6 +42,13 @@ public class ChatDto {
             this.senderName = chat.getSender().getUsername();
             this.chatRoomId = chat.getChatRoom().getId();
             this.createdDate = chat.getCreatedDate();
+            this.isOwner = false;
+        }
+
+        public void markOwner(String username) {
+            if (senderName.equals(username)) {
+                isOwner = true;
+            }
         }
 
         @Builder

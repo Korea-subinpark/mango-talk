@@ -2,6 +2,7 @@ package com.messenger.mango.web;
 
 import com.messenger.mango.domain.users.User;
 import com.messenger.mango.service.chat.ChatRoomService;
+import com.messenger.mango.service.chat.ChatService;
 import com.messenger.mango.web.dto.ChatRoomDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +18,7 @@ import java.util.Map;
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
+    private final ChatService chatService;
 
     @GetMapping
     public Map<Long, ChatRoomDto.ListResponse> getChatRoomList(@AuthenticationPrincipal User user) {
@@ -31,8 +33,11 @@ public class ChatRoomController {
     }
 
     @GetMapping("/{id}")
-    public ChatRoomDto.Response getChatRoom(@PathVariable Long id) {
-        return chatRoomService.getChatRoom(id);
+    public ChatRoomDto.Response getChatRoom(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        ChatRoomDto.Response chatRoom = chatRoomService.getChatRoom(id);
+        chatService.markOwnerToChat(chatRoom.getChats(), user.getUsername());
+
+        return chatRoom;
     }
 
     @PostMapping

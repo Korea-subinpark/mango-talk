@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Getter
 @NoArgsConstructor
 @Entity
@@ -18,10 +20,10 @@ public class Chat extends BaseTimeEntity {
     @Column(name = "chat_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     private User sender;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 

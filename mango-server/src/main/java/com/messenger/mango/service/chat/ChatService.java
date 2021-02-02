@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class ChatService {
@@ -34,5 +36,11 @@ public class ChatService {
 
         return chatRepository.save(chat)
                 .getId();
+    }
+
+    public void markOwnerToChat(List<ChatDto.Response> chats, String username) {
+        for (ChatDto.Response chat : chats) {
+            chat.markOwner(username);
+        }
     }
 }
