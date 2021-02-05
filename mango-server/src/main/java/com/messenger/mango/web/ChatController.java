@@ -18,6 +18,7 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void send(ChatDto.SaveRequest request, @AuthenticationPrincipal User user) {
+        System.out.println(user.getUsername());
         chatService.send(request, user.getUsername());
 
         Long chatRoomId = request.getChatRoomId();

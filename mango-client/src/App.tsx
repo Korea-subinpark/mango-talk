@@ -12,7 +12,7 @@ import LogoutButton from "./components/LogoutButton";
 import {User} from "./models";
 import ContentsContainer from "./components/ContentsContainer";
 import ChatRoom from "./components/ChatRoom";
-import {openConnection} from "./api/chat.t";
+import {initSocketConnection} from "./api/chat.t";
 
 import {Provider, useDispatch, useSelector} from "react-redux";
 import store from "./store";
@@ -45,7 +45,7 @@ function App(props: AppProps) {
 
     useEffect(() => {
         if (isAuthenticated) {
-            handleCreateSocket(openConnection());
+            handleCreateSocket(initSocketConnection());
         }
     });
 

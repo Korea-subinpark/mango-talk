@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, {useState} from "react"
 import { withRouter } from 'react-router-dom';
 
 import 'normalize.css';
@@ -12,7 +12,7 @@ import {
     Elevation
 } from '@blueprintjs/core';
 import {handleStringChange} from "./changeHandler";
-import {checkSocketNull, doSend, getChatList, getCookie} from "../api/chat.t";
+import {doPublish} from "../api/chat.t";
 import TextWrapper from "./TextWrapper";
 import {useSelector} from "react-redux";
 
@@ -20,11 +20,6 @@ import {useSelector} from "react-redux";
 const styleMargin0 = { margin: 0 };
 const styleButtonDisabled = { border: "1px solid #e7d73d", color: "#bdb038", backgroundColor: "#feeb41" };
 const styleButtonEnabled = { border: "1px solid #e7d73d", color: "#222", boxShadow: "none", backgroundImage: "none", backgroundColor: "#feeb41" };
-
-async function getMessages() {
-    // const response = await getChatList(getCookie("token"));
-    // return response.data;
-}
 
 function ChatRoom({ match } : any) {
     const { roomId } = match.params;
@@ -35,25 +30,13 @@ function ChatRoom({ match } : any) {
     const [chatList, setChatList] = useState([]);
     const onSetChat = handleStringChange(chat => {setChat(chat)});
     const {stompClient} = useSelector((state: any) => state.chat);
-    const username = useSelector((state: any) => state.login.username);
-    useEffect(() => {
-
-        // openChat(roomId);
-        // 채팅방의 번호
-        // getChatList(roomId).then((response) => {
-        //     for (const text of chatList) {
-        //         // setChatList.push(text);
-        //         // TODO
-        //     }
-        // });
-    }, []);
 
     const onClickSendButton = () => {
         let myChatList: any = [];
         try {
             // send API
             console.log("chat room test: " + chat);
-            doSend(chat, username, roomId, stompClient);
+            doPublish(chat, roomId, stompClient);
             for (const text of chatList) {
                 myChatList.push(text);
             }
@@ -65,17 +48,10 @@ function ChatRoom({ match } : any) {
             alert("전송 실패")
         }
     }
-    const isSocketNull = () => {
-        alert(checkSocketNull(stompClient) ? "연결됨" : "연결 안됨");
-        if (chat === "") {
-            return;
-        }
-    }
     return (
         <>
             <Card interactive={false} elevation={Elevation.TWO}>
                 <div className="chatRoom-container">
-                    <button onClick={isSocketNull}>소켓 null 체크</button>
                     <div className="chatRoom-wrapper">
                         <TextWrapper list={chatList} />
                     </div>
