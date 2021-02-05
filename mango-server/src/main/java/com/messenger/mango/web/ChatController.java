@@ -1,10 +1,12 @@
 package com.messenger.mango.web;
 
+import com.messenger.mango.domain.users.User;
 import com.messenger.mango.service.chat.ChatService;
 import com.messenger.mango.web.dto.ChatDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -15,13 +17,13 @@ public class ChatController {
     private final SimpMessagingTemplate template;
 
     @MessageMapping("/chat")
-    public void send(ChatDto.SaveRequest request) {
-        chatService.send(request);
+    public void send(ChatDto.SaveRequest request, @AuthenticationPrincipal User user) {
+        chatService.send(request, user.getUsername());
 
         Long chatRoomId = request.getChatRoomId();
         ChatDto.Response response = ChatDto.Response.builder()
                 .content(request.getContent())
-                .senderName(request.getSenderName())
+                .senderName(user.getUsername())
                 .chatRoomId(chatRoomId)
                 .build();
 

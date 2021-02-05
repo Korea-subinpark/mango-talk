@@ -13,13 +13,11 @@ public class ChatDto {
     @NoArgsConstructor
     public static class SaveRequest {
 
-        private String senderName;
         private String content;
         private Long chatRoomId;
 
         @Builder
-        public SaveRequest(String senderName, String content, Long chatRoomId) {
-            this.senderName = senderName;
+        public SaveRequest(String content, Long chatRoomId) {
             this.content = content;
             this.chatRoomId = chatRoomId;
         }
