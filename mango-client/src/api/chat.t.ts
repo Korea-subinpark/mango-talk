@@ -39,10 +39,15 @@ const initSocketConnection = () => {
         console.log("[Processing debug...]");
         console.log(debugLog);
     };
-
+    const callback = function (message: any) {
+        message.ack();
+    };
     // 3. STOMP 브로커에 대한 모든 연결에 대해 호출
     client.onConnect = function () {
         console.log(`[Processing onConnect... connect state: ${client.connected}]`);
+        // for (let roomNum of roomList) {
+            client.subscribe(`${SUBSCRIBE_URL}/${1}`, callback, {"ack": "client"});
+        // }
     }
 
     // 4-1. STOMP 브로커와의 연결이 끊길 때마다 호출(오류에 의한 disconnect는 제외)
@@ -92,14 +97,7 @@ const doSubscribeForChatList = (client: any, roomList: any) => {
     if (!client) {
         return;
     }
-    const callback = function (message: any) {
-        message.ack();
-    };
-    client.onConnect = function (frame: any) {
-        for (let roomNum of roomList) {
-            client.subscribe(`${SUBSCRIBE_URL}/${roomNum}`, callback, {"ack": "client"});
-        }
-    }
+
 }
 
 function doPublish(message: any, roomId: any, client: any) {

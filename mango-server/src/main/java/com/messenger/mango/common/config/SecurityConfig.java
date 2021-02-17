@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests() // URI 마다 권한 설정
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() // preflight request 허용
                 .antMatchers("/mango/v1/auth/login", "/mango/v1/user", "/docs/mango-api-guide.html").permitAll()
-                .antMatchers("/", "/stomp/**", "/app/**").permitAll() // socket test를 위해 허용
+                .antMatchers("/", "/stomp/**").permitAll() // socket test를 위해 허용
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfig(jwtTokenProvider));
