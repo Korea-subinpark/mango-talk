@@ -1,5 +1,6 @@
 package com.messenger.mango.service.chat;
 
+import com.messenger.mango.common.exception.NotFoundException;
 import com.messenger.mango.domain.chat.Chat;
 import com.messenger.mango.domain.chat.ChatRepository;
 import com.messenger.mango.domain.chat.ChatRoom;
@@ -14,11 +15,17 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class ChatService {
 
     private final ChatRepository chatRepository;
     private final UserService userService;
     private final ChatRoomService chatRoomService;
+
+    public Chat findById(Long id) {
+        return chatRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("해당 채팅이 없습니다. id=" + id));
+    }
 
     // TODO 푸시알람 구현
     /** 채팅을 전송하는 함수 */

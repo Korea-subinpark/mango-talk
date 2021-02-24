@@ -9,7 +9,7 @@ const instance = Axios.create({
 
 const SOCKET_URL = "http://localhost:8080/stomp";
 const ROOM_LIST_URL = "http://localhost:8080/mango/v1/chatRoom";
-const SUBSCRIBE_URL = "/topic/chat/";
+const SUBSCRIBE_URL = "http://localhost:8080/topic/chat";
 
 const initSocketConnection = () => {
     // 0. Client 인스턴스 생성
@@ -36,22 +36,18 @@ const initSocketConnection = () => {
 
     // 2-2. 콘솔에 디버그 로그를 남김
     client.debug = function(debugLog) {
+        console.log("[Processing debug...]");
         console.log(debugLog);
     };
-
     const callback = function (message: any) {
-        console.log("subscribe callback run")
-        const tx = client.begin();
-        console.log(tx)
-        console.log(JSON.parse(message.body))
-        message.ack({ transaction: tx.id });
-        tx.commit();
+        message.ack();
+        console.log("message : " + message);
     };
     // 3. STOMP 브로커에 대한 모든 연결에 대해 호출
     client.onConnect = function () {
         console.log(`[Processing onConnect... connect state: ${client.connected}]`);
         // for (let roomNum of roomList) {
-        client.subscribe(SUBSCRIBE_URL + "1", callback, {"ack": "client"});
+            client.subscribe("/topic/chat/1", callback, {"ack": "client"});
         // }
     }
 
