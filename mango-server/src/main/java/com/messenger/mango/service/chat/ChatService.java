@@ -22,13 +22,22 @@ public class ChatService {
     private final UserService userService;
     private final ChatRoomService chatRoomService;
 
+    public ChatDto.Response getChat(Long id) {
+        Chat chat = findById(id);
+
+        return new ChatDto.Response(chat);
+    }
+
     public Chat findById(Long id) {
         return chatRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("해당 채팅이 없습니다. id=" + id));
     }
 
     // TODO 푸시알람 구현
-    /** 채팅을 전송하는 함수 */
+
+    /**
+     * 채팅을 전송하는 함수
+     */
     @Transactional
     public Long send(ChatDto.SaveRequest request, String username) {
         User sender = (User) userService.loadUserByUsername(username);

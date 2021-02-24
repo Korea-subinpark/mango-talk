@@ -1,6 +1,5 @@
 package com.messenger.mango.web;
 
-import com.messenger.mango.domain.chat.Chat;
 import com.messenger.mango.service.chat.ChatService;
 import com.messenger.mango.web.dto.ChatDto;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +21,7 @@ public class ChatController {
         Long chatId = chatService.send(request, username);
 
         Long chatRoomId = request.getChatRoomId();
-
-        Chat chat = chatService.findById(chatId);
-        ChatDto.Response response = new ChatDto.Response(chat);
+        ChatDto.Response response = chatService.getChat(chatId);
 
         template.convertAndSend("/topic/chat/" + chatRoomId, response);
     }
