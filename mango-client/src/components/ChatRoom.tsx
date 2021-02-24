@@ -12,7 +12,7 @@ import {
     Elevation
 } from '@blueprintjs/core';
 import {handleStringChange} from "./changeHandler";
-import {doPublish} from "../api/chat.t";
+import {doPublish, getChatRoomList, getCookie} from "../api/chat.t";
 import TextWrapper from "./TextWrapper";
 import {useSelector} from "react-redux";
 
@@ -35,7 +35,6 @@ function ChatRoom({ match } : any) {
         let myChatList: any = [];
         try {
             // send API
-            console.log("chat room test: " + chat);
             doPublish(chat, roomId, stompClient);
             for (const text of chatList) {
                 myChatList.push(text);

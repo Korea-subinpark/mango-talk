@@ -1,6 +1,9 @@
 import Axios from "axios";
 import {Client} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import {useDispatch} from "react-redux";
+import {loginSuccess, logout} from "../store/modules/login";
+import {setStompClient} from "../store/modules/chat";
 
 const instance = Axios.create({
     baseURL: "http://localhost:8080/mango/v1",
@@ -9,7 +12,7 @@ const instance = Axios.create({
 
 const SOCKET_URL = "http://localhost:8080/stomp";
 const ROOM_LIST_URL = "http://localhost:8080/mango/v1/chatRoom";
-const SUBSCRIBE_URL = "http://localhost:8080/topic/chat";
+const SUBSCRIBE_URL = "/topic/chat/";
 
 const initSocketConnection = () => {
     // 0. Client 인스턴스 생성
@@ -36,18 +39,22 @@ const initSocketConnection = () => {
 
     // 2-2. 콘솔에 디버그 로그를 남김
     client.debug = function(debugLog) {
-        console.log("[Processing debug...]");
         console.log(debugLog);
     };
     const callback = function (message: any) {
-        message.ack();
-        console.log("message : " + message);
+        // chat
+        console.log("subscribe callback run")
+        const tx = client.begin();
+        console.log(tx)
+        console.log(JSON.parse(message.body));
+        message.ack({ transaction: tx.id });
+        tx.commit();
     };
     // 3. STOMP 브로커에 대한 모든 연결에 대해 호출
     client.onConnect = function () {
         console.log(`[Processing onConnect... connect state: ${client.connected}]`);
         // for (let roomNum of roomList) {
-            client.subscribe("/topic/chat/1", callback, {"ack": "client"});
+        client.subscribe(SUBSCRIBE_URL + "1", callback, {"ack": "client"});
         // }
     }
 
@@ -86,6 +93,9 @@ const setChatRoom = (token: string): any => {
     });
 }
 
+const getChatList = (chat: any) => {
+    // return insta
+}
 const getChatRoomList = (token: string) => {
     return instance.get(ROOM_LIST_URL, {
         headers: {
