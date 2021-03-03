@@ -20,7 +20,7 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private String secretKey = "secret"; //원래는 실제 운영용 application-real.yml을 만들어서 @Value를 이용해 관리해야함 (gitignore에도 등록)
-    private long tokenExpireTime = 3600000; // 1시간
+    private long tokenExpireTime = 3600000 * 6; // 6시간
 
     private final UserService userService;
 
