@@ -1,7 +1,7 @@
 package com.messenger.mango.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.messenger.mango.common.BaseControllerTest;
+import com.messenger.mango.config.BaseControllerTest;
 import com.messenger.mango.service.users.UserService;
 import com.messenger.mango.web.dto.UserDto;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -22,6 +23,8 @@ class AuthControllerTest extends BaseControllerTest {
     private UserService userService;
     @Autowired
     ObjectMapper objectMapper;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public static final String baseUrl = "http://localhost:8080/mango/v1/auth";
 
@@ -34,7 +37,7 @@ class AuthControllerTest extends BaseControllerTest {
 
         UserDto.SaveRequest saveRequest = UserDto.SaveRequest.builder()
                 .username(username)
-                .password(password)
+                .password(passwordEncoder.encode(password))
                 .build();
 
         userService.save(saveRequest);

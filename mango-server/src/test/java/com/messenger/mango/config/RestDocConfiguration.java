@@ -1,4 +1,4 @@
-package com.messenger.mango.common;
+package com.messenger.mango.config;
 
 import org.springframework.boot.test.autoconfigure.restdocs.RestDocsMockMvcConfigurationCustomizer;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentationConfigurer;

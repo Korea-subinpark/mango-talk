@@ -2,10 +2,7 @@ package com.messenger.mango.common.jwt;
 
 import com.messenger.mango.domain.UserRole;
 import com.messenger.mango.service.users.UserService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -85,14 +82,14 @@ public class JwtTokenProvider {
      * Token의 유효성을 검사하는 함수
      */
     public boolean validateToken(String token) {
-        Jws<Claims> claims = Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token);
-
-        Date expirationDate = claims.getBody().getExpiration();
-        if (expirationDate.before(new Date())) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token);
+        } catch (ExpiredJwtException | MalformedJwtException | SignatureException ex) {
             return false;
         }
+
         return true;
     }
 }

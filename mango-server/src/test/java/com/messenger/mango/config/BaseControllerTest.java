@@ -1,4 +1,4 @@
-package com.messenger.mango.common;
+package com.messenger.mango.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.extension.ExtendWith;

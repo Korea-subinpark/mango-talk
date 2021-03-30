@@ -3,6 +3,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.10.RELEASE' // 스프링 부트의 의존성들을 관리해 주는 플러그인
     id 'org.asciidoctor.convert' version '1.5.8' // AsciiDoc 파일을 컨버팅하고 Build 폴더에 복사하기 위한 플러그인
     id 'java'
+    id 'jacoco' // 코드 커버리지 체크 라이브러리
 }
 
 group = 'com.messenger.mango'
@@ -45,7 +46,85 @@ dependencies {
 
 test {
     outputs.dir snippetsDir // 테스트가 실행될 때 snippets들이 snippetsDir 위치에 생성되게 한다
+    jacoco {
+        destinationFile = file("$buildDir/jacoco/jacoco.exec")
+    }
     useJUnitPlatform()
+
+    finalizedBy 'jacocoTestReport'
+}
+
+jacoco {
+    toolVersion = '0.8.5'
+}
+
+jacocoTestReport {
+    // 코드 커버리지 결과를 리포트로 생성
+    reports {
+        // 원하는 타입의 report 생성 가능
+        html.enabled true
+        xml.enabled false
+        csv.enabled false
+    }
+
+    finalizedBy 'jacocoTestCoverageVerification'
+}
+
+jacocoTestCoverageVerification {
+    // 코드 커버리지 결과가 기준을 충족하는지 검증
+    violationRules {
+        rule {
+            // element가 없을시 프로젝트 전체 파일을 합친 값 기준
+            limit {
+                // counter 지정하지 않을시 'INSTRUCTION'
+                // value 지정하지 않을시 'COVEREDRATIO'
+                minimum = 0.10
+            }
+        }
+
+//        rule {
+//            enabled = true
+//
+//            element = 'CLASS' // rule을 체크할 단위
+//
+//            limit {
+//                counter = 'BRANCH'
+//                value = 'COVEREDRATIO'
+//                minimum = 0.90
+//            }
+//
+//            limit {
+//                counter = 'LINE'
+//                value = 'COVEREDRATIO'
+//                minimum = 0.80
+//            }
+//
+//            limit {
+//                counter = 'LINE'
+//                value = 'TOTALCOUNT'
+//                maximum = 200
+//            }
+//
+//            // 커버리지 체크를 제외할 클래스들
+//            excludes = [
+//                    '*.test.*'
+//            ]
+//        }
+    }
+}
+
+task testCoverage(type: Test) {
+    group 'verification'
+    description 'Run test with coverage'
+
+    dependsOn (
+            ':test',
+            ':jacocoTestReport',
+            ':jacocoTestCoverageVerification'
+    )
+
+    tasks['jacocoTestReport'].mustRunAfter(tasks['test'])
+    tasks['jacocoTestCoverageVerification'].mustRunAfter(tasks['jacocoTestReport'])
 }
 
 asciidoctor {
