@@ -78,7 +78,7 @@ jacocoTestCoverageVerification {
             limit {
                 // counter 지정하지 않을시 'INSTRUCTION'
                 // value 지정하지 않을시 'COVEREDRATIO'
-                minimum = 0.10
+                minimum = 0.40
             }
         }
 
