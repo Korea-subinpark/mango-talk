@@ -63,3 +63,7 @@ void getWrongIDTest() {
 
 # Network
 ![websocket](./images/websocket.png)
+
+# Diagram
+## Class Diagram
+![class-diagram](./images/class-diagram.png)
