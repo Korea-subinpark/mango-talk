@@ -56,7 +56,7 @@ void getWrongIDTest() {
 
 # 구현기능
 ## 로그인
-![login](./images/login.png)
+![login](./images/Login.png)
 ## 인증
 ![Auth](./images/Auth.png)
 
