@@ -21,12 +21,15 @@
 ### Front-end
 * Testing-Library
 * Jest
-
-* 테스트를 위한 디렉토리 구조
+* 테스트를 위한 디렉토리와 Snapshot 구조
+##### Test files directories
 ![TestDir](./images/test_dir.png)
-* Snapshot
+<br>
+##### Snapshot files directories & output
 ![SnapshotDir](./images/snapshot_dir.png)
+<br>
 ![SnapshotFrame](./images/snapshot_frame.png)
+
 * 테스트 예시
 1. Snapshot 및 props 데이터 전달 테스트 
 ```javascript
