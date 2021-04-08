@@ -8,8 +8,8 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {setNavbarTabId} from "../store/modules/nav";
 import ChatListContainer from "../containers/ChatListConatiner";
-function ContentsNavigator () {
 
+function ContentsNavigator () {
     const dispatch = useDispatch();
     const handleChangeNavbarTabId = (navbarTabId: string) => dispatch(setNavbarTabId(navbarTabId));
     let navbarTabId = useSelector((state: any) => state.nav.navbarTabId);

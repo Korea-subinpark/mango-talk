@@ -4,14 +4,11 @@ import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import ChatThumb from "./ChatThumb";
-import {Link} from "react-router-dom";
-import {doSubscribeForChatList} from "../api/chat.t";
-import {useSelector} from "react-redux";
+import {BrowserRouter, Link} from "react-router-dom";
 
 function ChatList({list}: any) {
+    console.log(list)
     const keyList = Object.keys(list);
-    const stompClient = useSelector((state: any) => state.chat);
-    doSubscribeForChatList(stompClient, keyList);
     const components: JSX.Element[] = [];
 
     keyList.map((roomNo: any, i: any) => {
@@ -20,9 +17,9 @@ function ChatList({list}: any) {
         const ellipsis = list[roomNo].ellipsis || "";
         const lastReceivedDate = list[roomNo].lastReceivedDate || "";
         components.push(
-            <Link to={`/chat/user/${roomNo}`}>
+            <Link key={`link-key-${i}`} to={`/chat/user/${roomNo}`}>
                 <ChatThumb
-                    key={`${username}${i}`}
+                    key={`chatThumb-key-${i}`}
                     username={username}
                     ellipsis={ellipsis}
                     lastReceivedDate={lastReceivedDate}
@@ -32,7 +29,9 @@ function ChatList({list}: any) {
     });
     return (
         <>
-            {components}
+            <BrowserRouter>
+               {components}
+            </BrowserRouter>
         </>
     );
 }
