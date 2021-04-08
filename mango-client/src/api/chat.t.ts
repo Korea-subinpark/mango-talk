@@ -97,7 +97,7 @@ const getChatList = (chat: any) => {
     // return insta
 }
 const getChatRoomList = (token: string) => {
-    return instance.get(ROOM_LIST_URL, {
+    return instance.get("http://localhost:8080/mango/v1/chatRoom", {
         headers: {
             "Authorization": `Bearer ${token}`
         }
