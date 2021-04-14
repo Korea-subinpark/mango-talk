@@ -168,6 +168,14 @@ describe('API', () => {
 ### Back-end
 * Junit 5
 * Jacoco - Code Coverage 측정
+    * Jacoco 설정<br/>
+    jacocoTestReport - 리포트를 생성하는 Job<br/>
+    jacocoTestCoverageVerification - 설정한 기준에 적합하는지 검증하는 job<br/>
+    ![jacoco](./images/jacoco.png)<br/>
+    * Jacoco Report<br/>
+    package별 code coverage 보고서
+    ![coverage](./images/coverage.png)<br/>
+
 
 * 테스트 예시
 ``` java
