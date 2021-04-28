@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  db:
+    image: mariadb:latest
+    ports:
+      - 3306:3306
+    volumes:
+      - ./data/db:/data/db
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_ROOT_PASSWORD: qwe123
+      MYSQL_DATABASE: mangodb
+    container_name: "mariadb"
+  app:
+    image: mango-server
+    restart: always
+    ports:
+      - 8080:8080
