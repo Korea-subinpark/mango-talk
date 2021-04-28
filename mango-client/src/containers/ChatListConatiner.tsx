@@ -17,7 +17,8 @@ async function getChats() {
 
 function ChatListContainer({ token }: any) {
     // @ts-ignore
-    const [state] = token ? useAsync(() => getChats(token), [token]) : useAsync(getChats, []);
+    // const [state] = token ? useAsync(() => getChats(token), [token]) : useAsync(getChats, []);
+    const [state] = useAsync(getChats, []);
     let { loading, data: list, error }: any = state;
     if (loading) return <div>로딩 중...</div>;
     if (error) return <div style={{color: "black"}}>채팅 목록을 불러오는 데 실패했습니다.</div>;
