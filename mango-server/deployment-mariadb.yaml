@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+spec:
+  strategy:
+    type: Recreate
+  template:
+    spec:
+      containers:
+        - image: mariadb:latest
+          name: mariadb
+          ports: 3306
+          env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: qwe123

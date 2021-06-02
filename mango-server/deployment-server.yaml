@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mango-server
+  labels:
+    app: mango-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mango-server
+  template:
+    metadata:
+      labels:
+        app: mango-server
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: mango-server
+          image: subinpark/mango-server:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+        - name: mariadb
+          image: mariadb:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: qwe123
+          ports:
+            - containerPort: 3306
+              name: mariadb
